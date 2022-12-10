@@ -2,6 +2,9 @@
 const { attachActivitiesToRoutines } = require('./activities');
 const client = require('./client');
 
+//hi, just testing.
+
+
 async function getRoutineById(id){
   // eslint-disable-next-line no-useless-catch
   try {
@@ -26,6 +29,7 @@ async function getRoutineById(id){
     throw error;
   }
 }
+
 
 async function getRoutinesWithoutActivities(){
   try {
