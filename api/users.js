@@ -48,6 +48,35 @@ router.post('/login', async (req, res, next) => {
 
 
 // POST /api/users/register
+router.post(‘/register’, async (req, res, next) => {
+    const { username, password } = req.body;
+    try {
+        const _user = await getUserByUsername(username);
+        if (_user) {
+            next({
+                name: ‘UserExistsError’,
+                message: ‘Sorry, a user with that username already exists’
+            });
+        }
+        const user = await createUser({
+            username,
+            password
+        });
+        const token= jwt.sign({
+            id: user.id,
+            username
+        }, process.env.JWT_SECRET, {
+            expiresIn: ‘1w’
+        });
+        res.send({
+            message: ‘Thank you for signing up!’,
+            token
+        });
+    } catch ({ name, message}) {
+        next({ name, message})
+    }
+});
+
 
 // GET /api/users/me
 
