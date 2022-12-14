@@ -1,12 +1,7 @@
 /* eslint-disable no-useless-catch */
 const express = require('express');
 const activitiesRouter = express.Router();
-const {getAllActivities,
-    getActivityById,
-
-    createActivity,
-    updateActivity
-} = require('../db')
+const {getAllActivities, createActivity} = require('../db')
 
 // GET /api/activities/:activityId/routines
 
