@@ -60,11 +60,11 @@ async function getRoutineActivitiesByRoutine({id}) {
 
 async function updateRoutineActivity ({id, ...fields}) {
   try {
-    const indexString = Object.keys(fields).map((key, index) => `"${key}"=$${index + 1}`).join(', ');
+    const setString = Object.keys(fields).map((key, index) => `"${key}"=$${index + 1}`).join(', ');
 
     const {rows: [routineActivity]} = await client.query(`
       UPDATE routine_activities
-      SET ${indexString}
+      SET ${setString}
       WHERE id=${id}
       RETURNING *;
     `,
