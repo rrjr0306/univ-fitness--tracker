@@ -25,5 +25,11 @@ app.get('*', (req, res) => {
     });
 });
 
+app.use((error, req, res, next) => {
+    if(res.statusCode < 400) {
+        res.status(500);
+        res.send({error: error.name, name: error.name, message: error.message})
+    }
+})
 
 module.exports = app;
