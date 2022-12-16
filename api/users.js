@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 // const { JWT_SECRET } = process.env
-const { createUser, getUserByUsername } = require('../db');
+const { createUser, getUserByUsername, getAllRoutinesByUser, getPublicRoutinesByUser} = require('../db');
+const { requireUser } = require("./utils")
 
 router.use((req, res, next) => {
     console.log("request being made to /users");
@@ -13,7 +14,7 @@ router.use((req, res, next) => {
 // POST /api/users/login
 
 router.post('/login', async (req, res, next) => {
-    const { username, password } = (req.body);
+    const { username, password } = req.body;
 
     if (!username || !password) {
         next({
@@ -48,14 +49,14 @@ router.post('/login', async (req, res, next) => {
 
 
 // POST /api/users/register
-router.post(‘/register’, async (req, res, next) => {
+router.post('/register', async (req, res, next) => {
     const { username, password } = req.body;
     try {
         const _user = await getUserByUsername(username);
         if (_user) {
             next({
-                name: ‘UserExistsError’,
-                message: ‘Sorry, a user with that username already exists’
+                name: 'UserExistsError',
+                message: 'Sorry, a user with that username already exists'
             });
         }
         const user = await createUser({
@@ -66,10 +67,10 @@ router.post(‘/register’, async (req, res, next) => {
             id: user.id,
             username
         }, process.env.JWT_SECRET, {
-            expiresIn: ‘1w’
+            expiresIn: '1w'
         });
         res.send({
-            message: ‘Thank you for signing up!’,
+            message: 'Thank you for signing up!',
             token
         });
     } catch ({ name, message}) {
@@ -79,7 +80,36 @@ router.post(‘/register’, async (req, res, next) => {
 
 
 // GET /api/users/me
+router.get('/me', requireUser, async (req, res, next) => {
+    const { user } = req;
+    try {
+        res.send(user)
+    } catch (error) {
+        next(error)
+    }
+});
 
 // GET /api/users/:username/routines
+router.get('/:username/routines', requireUser, async (req, res, next) => {
+const { username } = req.params;
+const user = await getUserByUsername(username);
+const userOne = await getPublicRoutinesByUser({ username: username});
+const userTwo = await getAllRoutinesByUser({ username: username});
+try { 
+    if (!username) {
+        next({
+            error: "Password isn't long enough",
+            message: "Password isn't long enough",
+            name: "ShortPassword",
+        });
+    } else if ( req.user && user.id === req.user.id) {
+        res.send(userOne)
+    } else {
+        res.send(userTwo)
+    }
+    } catch (error) {
+    next(error) 
+    }
+})
 
 module.exports = router;
