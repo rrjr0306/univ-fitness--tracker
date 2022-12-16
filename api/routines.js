@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-catch */
 const express = require('express');
-const { getAllRoutines, createRoutine, getRoutineActivityById, getRoutineById, updateRoutine } = require('../db');
+const { getAllRoutines, createRoutine, getRoutineActivityById, getRoutineById, updateRoutine, destroyRoutine, addActivityToRoutine } = require('../db');
 const router = express.Router();
 const { requireUser } = require('./utils');
 
@@ -10,8 +10,8 @@ router.get('/', async (req, res, next) => {
     try {
         const allRoutines = await getAllRoutines();
         res.send(allRoutines);
-    } catch (error) {
-        next (error)
+    } catch ({ name, message }) {
+        next ({ name, message }); 
     }
 
 })
@@ -54,6 +54,57 @@ router.patch('/:routineId', requireUser, async (req, res, next) => {
 
 // DELETE /api/routines/:routineId
 
+router.delete('/:routineId', requireUser, async (req, res, next) => {
+    const { routineId } = req.params;
+
+    try {
+        const routine = await getRoutineById(routineId)
+       
+        if (routine && routine.creatorId === req.user.id) {
+            const deletedRoutine = await destroyRoutine(routineId)
+            res.send(routine)
+        } else {
+            next(routine ? {
+                name: "UnauthorizedUserError",
+                message: "You cannot delete a routine which is not yours"
+            } : {
+                name: "RoutineNotFoundError",
+                message: "That routine does not exist"
+            });
+        }
+
+    } catch ({ name, message }) {
+        next ({ name, message })
+    }
+
+});
+
 // POST /api/routines/:routineId/activities
+
+router.post('/:routineId/activities', async (req, res, next) => {
+    const { routineId } = req.params;
+    const { activityId, count, duration } = req.body;
+    const calledActivity = await getRoutineActivityById(activityId)
+
+    try {
+        if (routine.creatorId !== req.user.id) {
+            res.status(403)
+            next({
+                name: "UnauthorizedUserError",
+                message: "You cannot this activity"
+            })
+
+        const routine = await getRoutineById(routineId)
+        const updatedActivity = await addActivityToRoutine({ routineId, activityId, count, duration })
+
+        res.send(updatedActivity);
+        }
+
+    } catch ({ name, message }) {
+        next ({ name, message })
+    }
+})
+
+
 
 module.exports = router;
