@@ -85,7 +85,8 @@ router.post('/:routineId/activities', async (req, res, next) => {
     const { routineId } = req.params;
     const { activityId, count, duration } = req.body;
     const calledActivity = await getRoutineActivityById(activityId)
-
+    const routine = await getRoutineById(routineId)
+    
     try {
         if (routine.creatorId !== req.user.id) {
             res.status(403)
@@ -94,7 +95,7 @@ router.post('/:routineId/activities', async (req, res, next) => {
                 message: "You cannot this activity"
             })
 
-        const routine = await getRoutineById(routineId)
+        
         const updatedActivity = await addActivityToRoutine({ routineId, activityId, count, duration })
 
         res.send(updatedActivity);
