@@ -32,8 +32,25 @@ async function getActivityByName(name) {
 }
 
 // select and return an array of all activities
-// async function attachActivitiesToRoutines(routines) {
-// }
+async function attachActivitiesToRoutines(routines) {
+
+  const moneySigns = routines.map((routine, index) => {
+    return `$${index + 1}`
+  }).join(', ');
+
+  const routineIds = routines.map((routine) => {
+    return routine.id
+  });
+
+  const {rows : activities} = await client.query(`
+    SELECT activities.*, routine_activities.duration, routine_activities.count, routine_activities.id AS "routineActivityId", routine_activities."routineId"
+    FROM activities
+    JOIN routine_activities ON routine_activities."activityId" = activities.id
+    WHERE routine_activities."routineId" IN (${moneySigns});
+  `, routineIds);
+
+  return activities;
+}
 
 // return the new activity
 async function createActivity({ name, description }) {
@@ -75,5 +92,6 @@ module.exports = {
   getActivityById,
   getActivityByName,
   createActivity,
-  updateActivity
+  updateActivity,
+  attachActivitiesToRoutines
 }
