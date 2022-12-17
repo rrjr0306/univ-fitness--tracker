@@ -1,4 +1,5 @@
 /* eslint-disable no-useless-catch */
+// const { UserDoesNotExistError } = require('../errors')
 const client = require("./client");
 const bcrypt = require('bcrypt');
 
