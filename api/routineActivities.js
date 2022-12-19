@@ -1,25 +1,32 @@
 const express = require('express');
 const router = express.Router();
 const { requireUser } = require('./utils')
-const { getRoutineById, updateRoutineActivity, destroyRoutineActivity, getRoutineActivityById } = require('../db');
+const { getRoutineById, updateRoutineActivity, destroyRoutineActivity, getRoutineActivityById, getUserById } = require('../db');
 
 // PATCH /api/routine_activities/:routineActivityId
 
 router.patch('/:routineActivityId', requireUser, async (req, res, next) => {
     const { count, duration } = req.body;
-    const routine = await getRoutineById(id);
-    const id = req.params.routineActivityId;
-
+    const {routineAcitivityId} = req.params;
+    const {id, username} = req.user;
+    const routineToBeUpdated = await getRoutineActivityById(routineAcitivityId);
+    const routineId = await getUserById(routineAcitivityId)
     try {
-        if (routine.creatorId !== req.user.id) {
-            next({
-                name: 'UnauthorizedUserError',
-                message: 'You are not the owner of this routine'
+        if (routineToBeUpdated.id !== id) {
+            res.status(403);
+            res.send({
+                error: 'User is not allowed to update this routine.',
+                name: 'User is not allowed to update this routine.',
+                message: `User ${username} is not allowed to update ${routineId.name}`
             })
+        } else {
+            const updatedRoutineActivity = await updateRoutineActivity({
+                id: id,
+                count: count, 
+                duration: duration
+            });
+            res.send(updatedRoutineActivity)
         }
-
-        const updatedRoutineActivity = await updateRoutineActivity({ id, count, duration})
-        res.send(updatedRoutineActivity)
     } catch(error) {
         next(error);
     }

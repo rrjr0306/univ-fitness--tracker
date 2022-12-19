@@ -89,16 +89,9 @@ router.post('/register', async (req, res, next) => {
 
 // GET /api/users/me
 router.get('/me', requireUser, async (req, res, next) => {
-    const {user} = req
+    const {user} = req.user
     try {
-        if(user) {
-            res.status(401)
-            res.send({
-                error: "MissingUserError",
-                message: "You must be logged in.",
-                name: "MissingUserError"
-            })
-        }
+        res.send(user)
     } catch (error) {
         next(error)
     }
@@ -108,14 +101,14 @@ router.get('/me', requireUser, async (req, res, next) => {
 router.get('/:username/routines', requireUser, async (req, res, next) => {
 const { username } = req.params;
 const user = await getUserByUsername(username);
-const userOne = await getPublicRoutinesByUser({ username: username});
-const userTwo = await getAllRoutinesByUser({ username: username});
+const userOne = await getPublicRoutinesByUser({username});
+const userTwo = await getAllRoutinesByUser({username});
 try { 
     if (!username) {
         next({
-            error: "Password isn't long enough",
-            message: "Password isn't long enough",
-            name: "ShortPassword",
+            error: "PASSWORD TOO SHORT",
+            message: "Password Too Short!",
+            name: "PasswordIsTooShort",
         });
     } else if ( req.user && user.id === req.user.id) { res.send(userOne)
     } else { res.send(userTwo)}

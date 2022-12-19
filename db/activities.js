@@ -42,6 +42,9 @@ async function attachActivitiesToRoutines(routines) {
   const routineId = routines.map((routine) => {
     return routine.id;
   });
+  if(!routineId?.length) {
+    return [];
+  }
 
   try {
     const {rows: activityRoutine} = await client.query(`
@@ -51,7 +54,7 @@ async function attachActivitiesToRoutines(routines) {
       WHERE routine_activities."routineId" IN (${moneySigns});
     `, routineId);
     // console.log("ACTIVITYROUTINE", activityRoutine)
-    for (let routine of routinesCopy) {
+    for (const routine of routinesCopy) {
       
       const addedActivity = activityRoutine.filter((activity) => {
         return activity.routineId === routine.id;
