@@ -11,14 +11,16 @@ async function createUser({ username, password }) {
 
     const hashedPassword = await bcrypt.hash(password, SALT_COUNT)
   
-    const { rows : [user], } = await client.query(`
-        INSERT INTO users (username, password)
-        VALUES ($1, $2)
-        ON CONFLICT (username) DO NOTHING
-        RETURNING *;
+    const {rows : [user]} = await client.query(
+      `INSERT INTO users (username, password)
+       VALUES ($1, $2)
+       ON CONFLICT (username) DO NOTHING
+       RETURNING *;
       `, [username, hashedPassword]);
 
-      delete user.password
+      delete user.password;
+
+      // console.log("USER", user)
       return user;
     } catch (error) {
       throw error;
@@ -31,6 +33,8 @@ const user = await getUserByUsername(username);
 const hashedPassword = user.password;
 
 const isValid = await bcrypt.compare(password, hashedPassword);
+
+delete user.password;
 
 if (isValid) {
 

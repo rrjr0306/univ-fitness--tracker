@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-catch */
-// const { attachActivitiesToRoutines } = require('./activities');
+const { attachActivitiesToRoutines } = require('./activities');
 const client = require('./client');
 
 //hi, just testing.
@@ -9,7 +9,7 @@ async function getRoutineById(id){
   // eslint-disable-next-line no-useless-catch
   try {
     const { rows: [routine]} = await client.query(`
-      SELECT id, "creatorId", "isPublic", name, goal
+      SELECT *
       FROM routines
       WHERE id=$1;
       `,
@@ -38,6 +38,8 @@ async function getRoutinesWithoutActivities(){
       FROM routines;
     `);
 
+    // console.log("ROUTINES", routines)
+
     return routines
   } catch (error) {
     throw error
@@ -46,24 +48,30 @@ async function getRoutinesWithoutActivities(){
 
 async function getAllRoutines() {
   try {
-    const { rows: routines } = await client.query(`
+    const { rows: routines} = await client.query(`
         SELECT routines.*, users.username AS "creatorName"
         FROM routines
         JOIN users ON users.id = routines."creatorId";
     `);
 
-    for( const routine of routines ) {
-      const { rows: activities } = await client.query(`
-        SELECT *
-        FROM activities
-        JOIN routine_activities ON routine_activities."activityId" = activities.id
-        WHERE routine_activities."routineId" = $1
-      `, [ routine.id ]);
+    // for( let routine of routines ) {
+    //   const { rows: [activities] } = await client.query(`
+    //     SELECT *
+    //     FROM activities
+    //     JOIN routine_activities ON routine_activities."activityId" = activities.id
+    //     WHERE routine_activities."routineId" = $1
+    //   `, [ routine.id ]);
+    //   // console.log("RI", activities)
+    //   routine.activities = activities;
+    
+    // }
+    // console.log("R-----", routines)
+    // console.log("HERE")
+    const result = await attachActivitiesToRoutines(routines);
 
-      routine.activities = activities;
-    }
-
-    return routines;
+    console.log("RESULT", result)
+    return result
+    
   } catch (error) {
     throw error;
   }
@@ -78,18 +86,20 @@ async function getAllRoutinesByUser({username}) {
         WHERE users.username=$1;
     `, [ username ]);
 
-    for( const routine of routines ) {
-      const { rows: activities } = await client.query(`
-        SELECT *
-        FROM activities
-        JOIN routine_activities ON routine_activities."activityId" = activities.id
-        WHERE routine_activities."routineId" = $1
-      `, [ routine.id ]);
+    // for( const routine of routines ) {
+    //   const { rows: activities } = await client.query(`
+    //     SELECT *
+    //     FROM activities
+    //     JOIN routine_activities ON routine_activities."activityId" = activities.id
+    //     WHERE routine_activities."routineId" = $1
+    //   `, [ routine.id ]);
 
-      routine.activities = activities;
-    }
+    //   routine.activities = activities;
+    // }
 
-    return routines;
+    return await attachActivitiesToRoutines(routines)
+
+    // return routines;
   } catch (error) {
     throw error
   }
@@ -105,18 +115,18 @@ async function getPublicRoutinesByUser({username}) {
         AND users.username=$1;
     `, [ username ]);
 
-    for( const routine of routines ) {
-      const { rows: activities } = await client.query(`
-        SELECT *
-        FROM activities
-        JOIN routine_activities ON routine_activities."activityId" = activities.id
-        WHERE routine_activities."routineId" = $1
-      `, [ routine.id ]);
+    // for( const routine of routines ) {
+    //   const { rows: activities } = await client.query(`
+    //     SELECT *
+    //     FROM activities
+    //     JOIN routine_activities ON routine_activities."activityId" = activities.id
+    //     WHERE routine_activities."routineId" = $1
+    //   `, [ routine.id ]);
 
-      routine.activities = activities;
-    }
-
-    return routines;
+    //   routine.activities = activities;
+    // }
+    const result = attachActivitiesToRoutines(routines)
+    return result;
   } catch (error) {
     throw error
   }
@@ -131,18 +141,18 @@ async function getAllPublicRoutines() {
         WHERE "isPublic"=true;
     `);
 
-    for( const routine of routines ) {
-      const { rows: activities } = await client.query(`
-        SELECT *
-        FROM activities
-        JOIN routine_activities ON routine_activities."activityId" = activities.id
-        WHERE routine_activities."routineId" = $1
-      `, [ routine.id ]);
+    // for( const routine of routines ) {
+    //   const { rows: activities } = await client.query(`
+    //     SELECT *
+    //     FROM activities
+    //     JOIN routine_activities ON routine_activities."activityId" = activities.id
+    //     WHERE routine_activities."routineId" = $1
+    //   `, [ routine.id ]);
 
-      routine.activities = activities;
-    }
-
-    return routines;
+    //   routine.activities = activities;
+    // }
+    const result = attachActivitiesToRoutines(routines)
+    return result;
   } catch (error) {
     throw error
   }
@@ -160,18 +170,20 @@ async function getPublicRoutinesByActivity({id}) {
         AND routine_activities."activityId"=${id};
     `);
 
-    for( const routine of routines ) {
-      const { rows: activities } = await client.query(`
-        SELECT *
-        FROM activities
-        JOIN routine_activities ON routine_activities."activityId" = activities.id
-        WHERE routine_activities."routineId" = $1;
-      `, [ routine.id ]);
+    // for( const routine of routines ) {
+    //   const { rows: activities } = await client.query(`
+    //     SELECT *
+    //     FROM activities
+    //     JOIN routine_activities ON routine_activities."activityId" = activities.id
+    //     WHERE routine_activities."routineId" = $1;
+    //   `, [ routine.id ]);
+      
+    //   routine.activities = activities;
+    // }
 
-      routine.activities = activities;
-    }
+    const result = attachActivitiesToRoutines(routines)
 
-    return routines;
+    return result;
   } catch (error) {
     throw error
   }
