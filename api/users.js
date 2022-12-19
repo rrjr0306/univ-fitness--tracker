@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-// const { JWT_SECRET } = process.env
+const {JWT_SECRET} = process.env
 const { createUser, getUserByUsername, getAllRoutinesByUser, getPublicRoutinesByUser} = require('../db');
 const { requireUser } = require("./utils")
 
@@ -18,23 +18,19 @@ router.post('/login', async (req, res, next) => {
 
     if (!username || !password) {
         next({
-            name: "MissingCredentialsError",
-            message: "Please provide both a username and password"
+            error: 'IncorrectCredentialsError',
+            name: 'IncorrectCredentialsError',
+            message: "Sorry, your username or password is incorrect"
         });
     }
 
     try {
         const user = await getUserByUsername(username);
+        const token = jwt.sign(user, JWT_SECRET)
 
-        if ( user && user.password == password) {
-            const token = jwt.sign({
-                id:user.id,
-                username
-            }, process.env.JWT_SECRET, {
-                expiresIn: '1w'
-            });
+        if (user) {
 
-            res.send({ messge: "You're logged in!", token });
+            res.send({ message: "you're logged in!", token, user: user });
         } else {
             next({
                 name: 'IncorrectCredentialsError',
@@ -53,11 +49,22 @@ router.post('/register', async (req, res, next) => {
     const { username, password } = req.body;
     try {
         const _user = await getUserByUsername(username);
+
+        
         if (_user) {
             next({
+                error: 'UserExistsError',
                 name: 'UserExistsError',
-                message: 'Sorry, a user with that username already exists'
+                message: `User ${_user.username} is already taken.`
             });
+        }
+
+        if (password.length < 8) {
+            next({
+                error: 'PasswordError',
+                name: 'PasswordError',
+                message: 'Password Too Short!'
+            })
         }
         const user = await createUser({
             username,
@@ -71,19 +78,27 @@ router.post('/register', async (req, res, next) => {
         });
         res.send({
             message: 'Thank you for signing up!',
-            token
+            token,
+            user
         });
-    } catch ({ name, message}) {
-        next({ name, message})
+    } catch ({ error, name, message}) {
+        next({ error, name, message})
     }
 });
 
 
 // GET /api/users/me
 router.get('/me', requireUser, async (req, res, next) => {
-    const { user } = req;
+    const {user} = req
     try {
-        res.send(user)
+        if(user) {
+            res.status(401)
+            res.send({
+                error: "MissingUserError",
+                message: "You must be logged in.",
+                name: "MissingUserError"
+            })
+        }
     } catch (error) {
         next(error)
     }
