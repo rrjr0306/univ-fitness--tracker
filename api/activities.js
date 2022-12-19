@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-catch */
 const express = require('express');
-const { request } = require('../app');
+
 const router = express.Router();
 const {
     getAllActivities, 
@@ -17,6 +17,8 @@ router.get('/:activityId/routines', async (req, res, next) => {
     
     const {activityId} = req.params
 
+    console.log(activityId)
+
     try {
         const publicActivity = await getPublicRoutinesByActivity({
             id: activityId
@@ -27,11 +29,13 @@ router.get('/:activityId/routines', async (req, res, next) => {
         if(!publicActivity || !activities) {
             res.status(401);
             next({
+                error: "Activity not found",
                 name: "Activity not found",
                 message: `Activity ${activityId} not found`
             });
         } else {
             const publicRoutines = await getAllPublicRoutines();
+            console.log("PR", publicRoutines)
             res.send(publicRoutines);
         }
     } catch(error) {
@@ -87,7 +91,8 @@ router.post('/', async (req, res, next) => {
 // PATCH /api/activities/:activityId
 router.patch('/:activityId', async (req, res, next) => {
     const {name, description} = req.body;
-    const {activityId} = req.params
+    const {activityId} = req.params;
+    console.log("AID", activityId)
 
     try {
 

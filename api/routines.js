@@ -24,8 +24,6 @@ router.post('/', requireUser, async (req, res, next) => {
     const {id} = req.user;
 
     try {
-
-        if(id) {
             const routine = await createRoutine({ 
                 creatorId: id,
                 isPublic: isPublic,
@@ -33,7 +31,7 @@ router.post('/', requireUser, async (req, res, next) => {
                 goal: goal 
             });
             res.send(routine)
-        }     
+           
         
     } catch (error) {
         next (error); 
@@ -54,8 +52,8 @@ router.patch('/:routineId', requireUser, async (req, res, next) => {
             const updatedRoutine = await updateRoutine({id:routineId, name, goal, isPublic});
             res.send(updatedRoutine)
         }
-    } catch ({ name, message}) {
-        next ({ name, message});
+    } catch ({ error, name, message}) {
+        next ({ error, name, message});
     }
     } 
 )
