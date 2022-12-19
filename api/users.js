@@ -5,11 +5,11 @@ const {JWT_SECRET} = process.env
 const { createUser, getUserByUsername, getAllRoutinesByUser, getPublicRoutinesByUser} = require('../db');
 const { requireUser } = require("./utils")
 
-router.use((req, res, next) => {
-    console.log("request being made to /users");
+// router.use((req, res, next) => {
+//     console.log("request being made to /users");
     
-    next();
-});
+//     next();
+// });
 
 // POST /api/users/login
 
@@ -39,7 +39,7 @@ router.post('/login', async (req, res, next) => {
         }
     } catch(error) {
         console.log(error);
-        next(error)
+        next(error);
     }
 });
 
@@ -117,13 +117,11 @@ try {
             message: "Password isn't long enough",
             name: "ShortPassword",
         });
-    } else if ( req.user && user.id === req.user.id) {
-        res.send(userOne)
-    } else {
-        res.send(userTwo)
-    }
+    } else if ( req.user && user.id === req.user.id) { res.send(userOne)
+    } else { res.send(userTwo)}
+
     } catch (error) {
-    next(error) 
+        next(error) 
     }
 })
 
