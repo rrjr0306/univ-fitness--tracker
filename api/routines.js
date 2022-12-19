@@ -62,7 +62,7 @@ router.delete('/:routineId', requireUser, async (req, res, next) => {
        
         if (routine && routine.creatorId === req.user.id) {
             const deletedRoutine = await destroyRoutine(routineId)
-            res.send(routine)
+            res.send(deletedRoutine)
         } else {
             next(routine ? {
                 name: "UnauthorizedUserError",

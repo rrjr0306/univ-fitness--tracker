@@ -92,21 +92,23 @@ router.patch('/:activityId', async (req, res, next) => {
     try {
 
         const actName = await getActivityByName(name);
-        const actId = await getActivityById(activityId);
+        const activityFromId = await getActivityById(activityId);
 
-        if(!actId) {
+        console.log("activityId", activityFromId)
+
+        if(!activityFromId) {
             res.status(401);
-            next({
+            res.send({
                 error: "ActivityIdError",
                 name: "Activity by that id does not exist",
-                message: `Activity id ${actId}`
+                message: `Activity ${activityId} not found`
             });
         } else if(actName) {
             res.status(401);
-            next({
+            res.send({
                 error: "AcitivityNameError",
                 name: "Activity by that name already exists",
-                message: `Activity by the name ${name} already exists`
+                message: `An activity with name ${name} already exists`
             })
         } else {
             const updatedActivity = await updateActivity({
@@ -116,8 +118,8 @@ router.patch('/:activityId', async (req, res, next) => {
             });
             res.send(updatedActivity);
         }
-    } catch({error, name, message}) {
-        next({error, name, message});
+    } catch(error) {
+        next(error);
     }
 })
 

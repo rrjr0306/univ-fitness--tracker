@@ -1,14 +1,15 @@
 /* eslint-disable no-useless-catch */
 const client = require("./client")
 
+
 // database functions
 async function getAllActivities() {
   try {
-    const {rows: activities} = await client.query(`
+    const {rows} = await client.query(`
       SELECT * FROM activities;
     `);
     
-    return activities;
+    return rows;
   } catch(error) {
     throw error;
   }
@@ -32,28 +33,43 @@ async function getActivityByName(name) {
 }
 
 // select and return an array of all activities
-// async function attachActivitiesToRoutines(routines) {
-//   try {
-//     const moneySigns = routines.map((routine, index) => {
-//       return `$${index + 1}`
-//     }).join(', ');
+async function attachActivitiesToRoutines(routines) {
 
-//     const routineIds = routines.map((routine) => {
-//       return routine.id
-//     });
+  const routinesCopy = [...routines]
+  const moneySigns = routines.map((_, index) => {
+    return `$${index + 1}`
+  }).join(', ');
+  const routineId = routines.map((routine) => {
+    return routine.id;
+  });
 
-//     const {rows: activities} = await client.query(`
-//       SELECT activities.*, routine_activities.duration, routine_activities.count, routine_activities.id AS "routineActivityId", routine_activities."routineId"
-//       FROM activities
-//       JOIN routine_activities ON routine_activities."activityId" = activities.id
-//       WHERE routine_activities."routineId" IN (${moneySigns});
-//     `, routineIds);
+  try {
+    const {rows: activityRoutine} = await client.query(`
+      SELECT activities.*, routine_activities.duration, routine_activities.count, routine_activities.id AS "routineActivityId", routine_activities."routineId"
+      FROM activities
+      JOIN routine_activities ON activities.id = routine_activities."activityId"
+      WHERE routine_activities."routineId" IN (${moneySigns});
+    `, routineId);
+    // console.log("ACTIVITYROUTINE", activityRoutine)
+    for (let routine of routinesCopy) {
+      
+      const addedActivity = activityRoutine.filter((activity) => {
+        return activity.routineId === routine.id;
 
-//     return activities;
-//   } catch(error) {
-//     throw error;
-//   }
-// }
+      })
+      // console.log("AA", addedActivity)
+      routine.activities = addedActivity;
+      // console.log("ROUTINE", routine);
+
+    }
+    // console.log("ROUTINECOPY", routinesCopy)
+    return routinesCopy;
+
+    
+  } catch(error) {
+    throw error;
+  }
+}
 
 // return the new activity
 async function createActivity({ name, description }) {
@@ -96,5 +112,5 @@ module.exports = {
   getActivityByName,
   createActivity,
   updateActivity,
-  // attachActivitiesToRoutines
+  attachActivitiesToRoutines
 }
