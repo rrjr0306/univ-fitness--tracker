@@ -21,7 +21,7 @@ router.use(async (req, res, next) => {
         
         try {
             const parseToken = jwt.verify(token, JWT_SECRET);
-            console.log("PTOKEN", parseToken)
+            // console.log("PTOKEN", parseToken)
 
             const id = parseToken && parseToken.id
             if(id) {

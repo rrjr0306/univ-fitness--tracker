@@ -20,26 +20,21 @@ router.get('/', async (req, res, next) => {
 // POST /api/routines
 
 router.post('/', requireUser, async (req, res, next) => {
-    const { creatorId, isPublic, name, goal } = req.body;
+    console.log('REQ.BODY!!!!', req.body)
+    const { isPublic, name, goal } = req.body;
     const {id} = req.user;
     
     console.log("ID", req.user.id)
     try {
-        if(creatorId === id) {    
-            const routine = await createRoutine({ 
-                creatorId: id,
-                isPublic: isPublic,
-                name: name,
-                goal: goal 
-            });
-            res.send(routine)
-        } else {
-            next({
-                error: "User Error",
-                name: "UserError", 
-                message: "You must be logged in to perform this action."
-            })
-        }
+        const routine = await createRoutine({ 
+            creatorId: id,
+            isPublic: isPublic,
+            name: name,
+            goal: goal 
+        });
+        console.log('ROUTINE', routine)
+        res.send(routine)
+
         
     } catch (error) {
         next (error); 
@@ -59,6 +54,13 @@ router.patch('/:routineId', requireUser, async (req, res, next) => {
         if(id === req.user.id) {
             const updatedRoutine = await updateRoutine({id:routineId, name, goal, isPublic});
             res.send(updatedRoutine)
+        } else {
+            res.status(403);
+            res.send({
+                name: "UnauthorizedUserError",
+                message: `User ${req.user.username} is not allowed to update ${routine.name}`,
+                error: "User is not allowed to edit."
+            })
         }
     } catch ({ error, name, message}) {
         next ({ error, name, message});
@@ -75,17 +77,17 @@ router.delete('/:routineId', requireUser, async (req, res, next) => {
     try {
         const routine = await getRoutineById(routineId)
        
-        if (routine && routine.creatorId === req.user.id) {
+        if (routine.creatorId === req.user.id) {
             const deletedRoutine = await destroyRoutine(routineId)
-            res.send(deletedRoutine)
+            console.log('DELETEDROUTINE!!', deletedRoutine)
+            res.send(routine)
         } else {
-            next(routine ? {
+            res.status(403)
+            res.send({
                 name: "UnauthorizedUserError",
-                message: "You cannot delete a routine which is not yours"
-            } : {
-                name: "RoutineNotFoundError",
-                message: "That routine does not exist"
-            });
+                message: `User ${req.user.username} is not allowed to delete ${routine.name}`,
+                error: "User is not allowed to delete."
+            })
         }
 
     } catch ({ name, message }) {
@@ -99,25 +101,28 @@ router.delete('/:routineId', requireUser, async (req, res, next) => {
 router.post('/:routineId/activities', async (req, res, next) => {
     const { routineId } = req.params;
     const { activityId, count, duration } = req.body;
-    const calledActivity = await getRoutineActivityById(activityId)
-    const routine = await getRoutineById(routineId)
-    
+
     try {
-        if (routine.creatorId !== req.user.id) {
-            res.status(403)
-            next({
-                name: "UnauthorizedUserError",
-                message: "You cannot this activity"
-            })
-
-        
         const updatedActivity = await addActivityToRoutine({ routineId, activityId, count, duration })
+        res.send(updatedActivity)
+        console.log('UPDATED ACTIVITY', updatedActivity)
+        if (!updatedActivity) {
+            res.send({
+                error: "Duplicates not allowed",
+                message: `Activity ID ${activityId} already exists in Routine ID ${routineId}`,
+                name: "DuplicateError"
+            })            
+        } else {
+            res.send(updatedActivity)
 
-        res.send(updatedActivity);
         }
 
     } catch ({ name, message }) {
-        next ({ name, message })
+        next({
+            error: "Duplicates not allowed",
+            message: `Activity ID ${activityId} already exists in Routine ID ${routineId}`,
+            name: "DuplicateError"
+        })          
     }
 })
 
