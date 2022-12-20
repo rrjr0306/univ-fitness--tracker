@@ -90,10 +90,10 @@ router.post('/register', async (req, res, next) => {
 
 // GET /api/users/me
 router.get('/me', requireUser, async (req, res, next) => {
-    console.log("REQUSER", req.user)
+    const {user} = req;
     
     try{
-        res.send(req.user)
+        res.send(user)
     } catch (error) {
         next(error)
     }
@@ -105,8 +105,8 @@ const { username } = req.params;
 console.log("UN", username)
 const user = await getUserByUsername(username);
 console.log("USER", user)
-const publicRoutine = await getPublicRoutinesByUser(username);
-const allRoutines = await getAllRoutinesByUser(username);
+const publicRoutine = await getPublicRoutinesByUser({username: username});
+const allRoutines = await getAllRoutinesByUser({username: username});
 try { 
     if (!username) {
         next({
