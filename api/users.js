@@ -5,11 +5,11 @@ const {JWT_SECRET="neverTell"} = process.env
 const { createUser, getUserByUsername, getAllRoutinesByUser, getPublicRoutinesByUser} = require('../db');
 const { requireUser } = require("./utils")
 
-router.use((req, res, next) => {
-    console.log("request being made to /users");
+// router.use((req, res, next) => {
+//     console.log("request being made to /users");
     
-    next();
-});
+//     next();
+// });
 
 // POST /api/users/login
 
@@ -115,13 +115,15 @@ try {
             name: "PasswordIsTooShort",
         });
     } 
+    
     if ( req.user && user.id === req.user.id) {
         res.send(publicRoutine)
     } else {
         res.send(allRoutines)
     }
+
     } catch (error) {
-    next(error) 
+        next(error) 
     }
 })
 

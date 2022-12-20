@@ -1,5 +1,4 @@
 /* eslint-disable no-useless-catch */
-// const { UserDoesNotExistError } = require('../errors')
 const client = require("./client");
 const bcrypt = require('bcrypt');
 
@@ -14,15 +13,14 @@ async function createUser({ username, password }) {
   
     const {rows : [user]} = await client.query(
       `INSERT INTO users (username, password)
-        VALUES ($1, $2)
-        ON CONFLICT (username) DO NOTHING
-        RETURNING *;
+       VALUES ($1, $2)
+       ON CONFLICT (username) DO NOTHING
+       RETURNING *;
       `, [username, hashedPassword]);
 
       delete user.password;
 
       // console.log("USER", user)
-
       return user;
     } catch (error) {
       throw error;
@@ -39,6 +37,8 @@ const isValid = await bcrypt.compare(password, hashedPassword);
 delete user.password;
 
 if (isValid) {
+
+  delete user.password
   return user;
 } else {
   return null;
@@ -48,11 +48,10 @@ if (isValid) {
   }
 }
 
-
 async function getUserById(userId) {
 try {
-  const { rows: [user] } = await client.query(
-    `SELECT id, username
+  const { rows: [user] } = await client.query(`
+    SELECT id, username
     FROM users
     WHERE id=$1
     `, [userId]
@@ -69,8 +68,8 @@ try {
 
 async function getUserByUsername(username) {
 try {
-  const { rows: [user] } = await client.query(
-    `SELECT *
+  const { rows: [user] } = await client.query(`
+    SELECT *
     FROM users
     WHERE username=$1
     `,[username]
