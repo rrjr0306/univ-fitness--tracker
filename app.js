@@ -2,7 +2,7 @@ require("dotenv").config()
 const express = require("express")
 const app = express()
 const apiRouter = require('./api')
-const client = require('./db/client')
+const client = require('./db/client.js')
 
 client.connect();
 
@@ -25,8 +25,11 @@ app.get('*', (req, res) => {
     });
 });
 
-app.use((error, req, res, _) => {
-    res.send({error: error.name , name: error.name, message: error.message})
+app.use((error, req, res, next) => {
+    if (res.statusCode < 400) {
+        res.status(500)
+    }    
+    res.send({error: error.message , name: error.name, message: error.message})
 })
 
 module.exports = app;

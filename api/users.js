@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const {JWT_SECRET} = process.env
+const {JWT_SECRET="neverTell"} = process.env
 const { createUser, getUserByUsername, getAllRoutinesByUser, getPublicRoutinesByUser} = require('../db');
 const { requireUser } = require("./utils")
 
@@ -26,11 +26,13 @@ router.post('/login', async (req, res, next) => {
 
     try {
         const user = await getUserByUsername(username);
-        const token = jwt.sign(user, JWT_SECRET)
+        console.log("YOUSER", user)
+        const token = jwt.sign({id: user.id, username: user.username}, JWT_SECRET, {expiresIn: '1y'})
 
+        console.log("USERTOKEN", token)
         if (user) {
 
-            res.send({ message: "you're logged in!", token, user: user });
+            res.send({ user: user, message: "you're logged in!", token});
         } else {
             next({
                 name: 'IncorrectCredentialsError',
@@ -38,7 +40,6 @@ router.post('/login', async (req, res, next) => {
             });
         }
     } catch(error) {
-        console.log(error);
         next(error)
     }
 });
@@ -72,14 +73,14 @@ router.post('/register', async (req, res, next) => {
         });
         const token= jwt.sign({
             id: user.id,
-            username
-        }, process.env.JWT_SECRET, {
-            expiresIn: '1w'
+            username: user.username
+        }, JWT_SECRET, {
+            expiresIn: '1y'
         });
         res.send({
             message: 'Thank you for signing up!',
-            token,
-            user
+            token: token,
+            user: user
         });
     } catch ({ error, name, message}) {
         next({ error, name, message})
@@ -89,9 +90,10 @@ router.post('/register', async (req, res, next) => {
 
 // GET /api/users/me
 router.get('/me', requireUser, async (req, res, next) => {
-    const {user} = req.user
-    try {
-        res.send(user)
+    console.log("REQUSER", req.user)
+    
+    try{
+        res.send(req.user)
     } catch (error) {
         next(error)
     }
@@ -100,9 +102,11 @@ router.get('/me', requireUser, async (req, res, next) => {
 // GET /api/users/:username/routines
 router.get('/:username/routines', requireUser, async (req, res, next) => {
 const { username } = req.params;
+console.log("UN", username)
 const user = await getUserByUsername(username);
-const userOne = await getPublicRoutinesByUser({ username: username});
-const userTwo = await getAllRoutinesByUser({ username: username});
+console.log("USER", user)
+const publicRoutine = await getPublicRoutinesByUser(username);
+const allRoutines = await getAllRoutinesByUser(username);
 try { 
     if (!username) {
         next({
@@ -110,10 +114,11 @@ try {
             message: "Password Too Short!",
             name: "PasswordIsTooShort",
         });
-    } else if ( req.user && user.id === req.user.id) {
-        res.send(userOne)
+    } 
+    if ( req.user && user.id === req.user.id) {
+        res.send(publicRoutine)
     } else {
-        res.send(userTwo)
+        res.send(allRoutines)
     }
     } catch (error) {
     next(error) 
