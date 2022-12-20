@@ -6,14 +6,17 @@ async function getRoutineActivityById(id){
     const {rows: [routineActivity]} = await client.query(`
       SELECT *
       FROM routine_activities
-      WHERE id=${id};
-    `);
+      WHERE id=$1;
+    `,
+      [id]  
+    );
 
     return routineActivity;
   } catch (error) {
     throw error
   }
 }
+
 
 async function addActivityToRoutine({
   routineId,
@@ -30,7 +33,6 @@ async function addActivityToRoutine({
     `, 
     [routineId, activityId, count, duration]);    
     
-
     return routineActivities;
 
   } catch (error) {
@@ -67,7 +69,7 @@ async function updateRoutineActivity ({id, ...fields}) {
     `,
       Object.values(fields)
     )
-
+    console.log('ROUTINEACTIVITY!!', routineActivity)
     return routineActivity;
 
   } catch (error) {

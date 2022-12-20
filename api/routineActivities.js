@@ -7,25 +7,28 @@ const { getRoutineById, updateRoutineActivity, destroyRoutineActivity, getRoutin
 
 router.patch('/:routineActivityId', requireUser, async (req, res, next) => {
     const { count, duration } = req.body;
-    const {routineAcitivityId} = req.params;
+    const {routineActivityId} = req.params;
     const {id, username} = req.user;
-    const routineToBeUpdated = await getRoutineActivityById(routineAcitivityId);
-    const routineId = await getUserById(routineAcitivityId)
+    const routineToBeUpdated = await getRoutineActivityById(routineActivityId);
+    const {routineId} = routineToBeUpdated
+    const routine = await getRoutineById(routineId)
+    console.log('ROUTINE', routine) 
     try {
-        if (routineToBeUpdated.id !== id) {
-            res.status(403);
-            res.send({
-                error: 'User is not allowed to update this routine.',
-                name: 'User is not allowed to update this routine.',
-                message: `User ${username} is not allowed to update ${routineId.name}`
-            })
-        } else {
+
+        if (routineToBeUpdated && id === routine.creatorId) {
             const updatedRoutineActivity = await updateRoutineActivity({
-                id: id,
-                count: count, 
-                duration: duration
+                id: routineActivityId,
+                count, 
+                duration
             });
             res.send(updatedRoutineActivity)
+        }  else {
+            res.status(403);
+            res.send({
+                error: 'UnauthorizedUserError',
+                name: 'UnauthorizedUserError',
+                message: `User ${username} is not allowed to update ${routine.name}`
+            })
         }
     } catch(error) {
         next(error);
@@ -37,19 +40,24 @@ router.patch('/:routineActivityId', requireUser, async (req, res, next) => {
 
 router.delete('/:routineActivityId', requireUser, async (req, res, next) => {
     const { routineActivityId } = req.params;
+    const {id, username} = req.user
     const routineActivity = await getRoutineActivityById(routineActivityId)
-    const routine = await getRoutineById(routineActivity.routineId)
+    
+    const {routineId} = routineActivity
+    const routine = await getRoutineById(routineId)
 
     try {
-        if (routine.creatorId === req.user.id) {
+        if (routineActivity && routine.creatorId === id) {
             const deletedActivity = await destroyRoutineActivity(routineActivityId)
             res.send(deletedActivity)
         }
 
         else {
-            next({
+            res.status(403);
+            res.send({
+                error: 'UnauthorizedUserError.',
                 name: 'UnauthorizedUserError',
-                message: 'You are not the owner of this routine'
+                message: `User ${username} is not allowed to delete ${routine.name}`
             })
         }        
 
@@ -57,6 +65,7 @@ router.delete('/:routineActivityId', requireUser, async (req, res, next) => {
         next ({ name, message })
     }
 })
+
 
 
 
