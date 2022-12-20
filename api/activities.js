@@ -24,25 +24,24 @@ router.get('/:activityId/routines', async (req, res, next) => {
             id: activityId
         });
 
-        const activities = await getActivityById(activityId);
+        const activity = await getActivityById(activityId);
 
-        if(!publicActivity || !activities) {
-            res.status(401);
-            next({
+        console.log("PUBACT", publicActivity)
+
+        if(!activity) {
+            res.send({
                 error: "Activity not found",
                 name: "Activity not found",
                 message: `Activity ${activityId} not found`
             });
+            return
         } else {
-            const publicRoutines = await getAllPublicRoutines();
-            console.log("PR", publicRoutines)
-            res.send(publicRoutines);
+            res.send(publicActivity);
         }
-    } catch(error) {
-        next(error);
+    } catch({name, message}) {
+        next({name, message});
     }
 })
-
 // GET /api/activities
 router.get('/', async (req, res, next) => {
     try {
@@ -98,8 +97,6 @@ router.patch('/:activityId', async (req, res, next) => {
 
         const actName = await getActivityByName(name);
         const activityFromId = await getActivityById(activityId);
-
-        console.log("activityId", activityFromId)
 
         if(!activityFromId) {
             res.status(401);

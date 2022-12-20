@@ -20,10 +20,12 @@ router.get('/', async (req, res, next) => {
 // POST /api/routines
 
 router.post('/', requireUser, async (req, res, next) => {
-    const { isPublic, name, goal } = req.body;
+    const { creatorId, isPublic, name, goal } = req.body;
     const {id} = req.user;
-
+    
+    console.log("ID", req.user.id)
     try {
+        if(creatorId === id) {    
             const routine = await createRoutine({ 
                 creatorId: id,
                 isPublic: isPublic,
@@ -31,7 +33,13 @@ router.post('/', requireUser, async (req, res, next) => {
                 goal: goal 
             });
             res.send(routine)
-           
+        } else {
+            next({
+                error: "User Error",
+                name: "UserError", 
+                message: "You must be logged in to perform this action."
+            })
+        }
         
     } catch (error) {
         next (error); 
