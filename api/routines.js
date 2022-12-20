@@ -20,7 +20,6 @@ router.get('/', async (req, res, next) => {
 // POST /api/routines
 
 router.post('/', requireUser, async (req, res, next) => {
-    console.log('REQ.BODY!!!!', req.body)
     const { isPublic, name, goal } = req.body;
     const {id} = req.user;
     
@@ -117,7 +116,7 @@ router.post('/:routineId/activities', async (req, res, next) => {
 
         }
 
-    } catch ({ name, message }) {
+    } catch ({ name, message }) { 
         next({
             error: "Duplicates not allowed",
             message: `Activity ID ${activityId} already exists in Routine ID ${routineId}`,
