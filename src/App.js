@@ -1,7 +1,6 @@
 import React from "react";
 import {Home, Activities, Routines, Myroutines} from "./components";
 import {Link, Route, Switch} from "react-router-dom";
-
 // const BASE_URL = ""
 
 const App = () => {
@@ -9,7 +8,7 @@ const App = () => {
     return (
         <div>
             <nav>
-                <Link to ="/">
+                <Link to="/">
                     Home
                 </Link>
                 <Link to="/Activities">
@@ -22,10 +21,10 @@ const App = () => {
                     My Routines
                 </Link>
                 <div>
-                    <Link>
+                    <Link to="/Login">
                         Log In
                     </Link>
-                    <Link>
+                    <Link to="/Signup">
                         Sign Up
                     </Link>
                 </div>
