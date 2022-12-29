@@ -8,7 +8,6 @@ const {
     getActivityByName, 
     updateActivity, 
     getActivityById,
-    getAllPublicRoutines,
     getPublicRoutinesByActivity
 } = require('../db')
 
@@ -17,16 +16,12 @@ router.get('/:activityId/routines', async (req, res, next) => {
     
     const {activityId} = req.params
 
-    console.log(activityId)
-
     try {
         const publicActivity = await getPublicRoutinesByActivity({
             id: activityId
         });
 
         const activity = await getActivityById(activityId);
-
-        console.log("PUBACT", publicActivity)
 
         if(!activity) {
             res.send({
@@ -47,8 +42,6 @@ router.get('/', async (req, res, next) => {
     try {
         const allActivities = await getAllActivities();
 
-        console.log("HELP", allActivities)
-
         res.send(allActivities)
     } catch(error) {
         next(error);
@@ -61,7 +54,7 @@ router.post('/', async (req, res, next) => {
 
     try {
         let existingActivity = await getActivityByName(name);
-        console.log('EXISTING', existingActivity)
+        
         if(existingActivity) {
             next({
                 error: "An activity with this name already exists",
