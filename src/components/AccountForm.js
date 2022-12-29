@@ -1,12 +1,37 @@
 import React, {useState} from 'react';
-import { fetchLogin, fetchRegister } from "./api/api";
+import { fetchLogin, fetchRegister } from "../api/api.js";
+import { useParams, useHistory } from 'react-router-dom';
 
-const AccountForm = () => {
+const AccountForm = ({setToken}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
+    const {action} = useParams();
+    const history = useHistory();
+
+    const onSubmitHandler = async (event) => {
+        event.preventDefault();
+
+        const authenticated = action === "register" ? fetchRegister : fetchLogin;
+
+        const {error, token} = await authenticated(username, password);
+
+        if (error) {
+            console.error(error);
+        }
+
+        setToken(token);
+
+        if (token) {
+            history.push("/");
+        }
+    }
+
+    const title = action === "login" ? "Log In" : "Sign Up";
+
     return(
-        <form>
-            <h1>Sign Up</h1>
+        <form onSubmit={onSubmitHandler}>
+            <h1>{title}</h1>
             <div>
                 <label>Username</label>
                     <input 
@@ -22,7 +47,7 @@ const AccountForm = () => {
             <div>
                 <label>Password</label>
                     <input 
-                    type="text" 
+                    type="password" 
                     value={password} 
                     placeholder="password" 
                     minLength="8"
@@ -32,7 +57,7 @@ const AccountForm = () => {
                     }}/>
             </div>
             <button type="submit">
-                Sign Up
+                {title}
             </button>
         </form>
     )

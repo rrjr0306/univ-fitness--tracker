@@ -1,4 +1,4 @@
-const BASE_URL = "https://fitness-tracker-z419.onrender.com/api";
+const BASE_URL = "http://fitness-tracker-z419.onrender.com/api";
 
 const makeHeaders = (token) => {
     const headers = {
