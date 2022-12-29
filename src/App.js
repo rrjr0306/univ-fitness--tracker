@@ -1,15 +1,46 @@
-import React from "react";
-import {Home, Activities, Routines, Myroutines} from "./components";
-import {Link, Route, Switch} from "react-router-dom";
-
-// const BASE_URL = ""
+import React, {useEffect, useState} from "react";
+import {Home, Activities, Routines, Myroutines, AccountForm} from "./components";
+import {Link, Route, Switch, useHistory} from "react-router-dom";
+import {fetchGuest} from "./api/api"
 
 const App = () => {
+
+    const [username, setUsername] = useState(null)
+    const [token, setToken] = useState(
+        window.localStorage.getItem("token") || null
+    );
+
+    const history = useHistory();
+
+    useEffect(() => {
+        if (token) {
+            const getGuest = async () => {
+                const {username} = await fetchGuest(token);
+                console.log("RESULT", username)
+                setUsername(username)
+            };
+            getGuest();
+        }
+    }, [token])
+
+    useEffect(() => {
+        if (token) {
+            window.localStorage.setItem("token", token)
+        } else {
+            window.localStorage.removeItem("token")
+        }
+    }, [token])
+
+    const logOut = () => {
+        setToken(null);
+        setUsername(null);
+        history.push('/');
+    }
 
     return (
         <div>
             <nav>
-                <Link to ="/">
+                <Link to="/">
                     Home
                 </Link>
                 <Link to="/Activities">
@@ -21,19 +52,28 @@ const App = () => {
                 <Link to="/Myroutines">
                     My Routines
                 </Link>
-                <div>
-                    <Link>
-                        Log In
-                    </Link>
-                    <Link>
-                        Sign Up
-                    </Link>
+                <div className="right menu">
+                    {token ? (
+                        <button onClick={(event) => {
+                            event.preventDefault();
+                            logOut();
+                        }}>Log Out</button>
+                    ):(
+                    <>
+                        <Link to="/AccountForm/login">
+                            Log In
+                        </Link>
+                        <Link to="/AccountForm/register">
+                            Sign Up    
+                        </Link>    
+                    </>
+                    )}
                 </div>
             </nav>
 
             <Switch>
                 <Route exact path="/" >
-                    <Home />
+                    <Home username={username}/>
                 </Route>
                 <Route path="/Activities">
                     <Activities />
@@ -43,6 +83,9 @@ const App = () => {
                 </Route>
                 <Route path="/Myroutines">
                     <Myroutines />
+                </Route>
+                <Route path="/AccountForm/:action">
+                    <AccountForm setToken={setToken}/>
                 </Route>
             </Switch>
 
