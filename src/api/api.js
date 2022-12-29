@@ -101,3 +101,31 @@ export const fetchLogin = async (username, password) => {
         console.error("There was an error logging in", error);
     }
 };
+
+export const fetchGuest = async (token) => {
+    try {
+        const {success, error, data} = await callAPI('/users/me', {
+            token: token
+        })
+
+        if (success) {
+            return {
+                error: null,
+                username: data.username,
+                message: data.message
+            }
+        } else {
+            return {
+                error: error.message,
+                data: null
+            }
+        }
+    } catch(error) {
+        console.error('Failed to fetch guest!', error);
+
+        return {
+            error: "Failed to get guest",
+            data: null
+        }
+    }
+}

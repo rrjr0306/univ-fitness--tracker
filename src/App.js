@@ -1,9 +1,13 @@
-import React from "react";
-import {Home, Activities, Routines, Myroutines} from "./components";
+import React, {useState} from "react";
+import {Home, Activities, Routines, Myroutines, AccountForm} from "./components";
 import {Link, Route, Switch} from "react-router-dom";
 // const BASE_URL = ""
 
 const App = () => {
+
+    const [token, setToken] = useState(
+        window.localStorage.getItem("token") || null
+    );
 
     return (
         <div>
@@ -20,13 +24,8 @@ const App = () => {
                 <Link to="/Myroutines">
                     My Routines
                 </Link>
-                <div>
-                    <Link to="/Login">
-                        Log In
-                    </Link>
-                    <Link to="/Signup">
-                        Sign Up
-                    </Link>
+                <div className="right menu">
+                    {token}
                 </div>
             </nav>
 
@@ -42,6 +41,9 @@ const App = () => {
                 </Route>
                 <Route path="/Myroutines">
                     <Myroutines />
+                </Route>
+                <Route path="/AccountForm/:action">
+                    <AccountForm />
                 </Route>
             </Switch>
 
