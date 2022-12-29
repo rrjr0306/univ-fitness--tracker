@@ -1,26 +1,55 @@
 import React from "react";
 import {Home, Activities, Routines, Myroutines} from "./components";
-import {Route, Switch} from "react-router-dom";
+import {Link, Route, Switch} from "react-router-dom";
 
 // const BASE_URL = ""
 
 const App = () => {
 
-return (
-<div>
-    <NavBar />
+    return (
+        <div>
+            <nav>
+                <Link to ="/">
+                    Home
+                </Link>
+                <Link to="/Activities">
+                    Activities
+                </Link>
+                <Link to="/Routines">
+                    Routines
+                </Link>
+                <Link to="/Myroutines">
+                    My Routines
+                </Link>
+                <div>
+                    <Link>
+                        Log In
+                    </Link>
+                    <Link>
+                        Sign Up
+                    </Link>
+                </div>
+            </nav>
 
-    <Switch>
-        <Route exact path="/" component={Home}/>
-        <Route path="/Activities" component={Activities}/>
-        <Route path="/Routines" component={Routines}/>
-        <Route path="/Myroutines" component={Myroutines}/>
-    </Switch>
+            <Switch>
+                <Route exact path="/" >
+                    <Home />
+                </Route>
+                <Route path="/Activities">
+                    <Activities />
+                </Route>
+                <Route path="/Routines">
+                    <Routines />
+                </Route>
+                <Route path="/Myroutines">
+                    <Myroutines />
+                </Route>
+            </Switch>
 
-</div>
+        </div>
 
-)
-}
+    );
+};
 
 
 
