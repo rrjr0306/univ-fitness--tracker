@@ -8,6 +8,7 @@
     "seed": "node ./db/seed.js",
     "start:dev": "nodemon server.js",
     "start:client": "react-scripts start",
+    "build": "react-scripts build",
     "start": "node server.js",
     "test": "jest --runInBand",
     "test:watch": "jest --runInBand --watchAll"
@@ -28,8 +29,8 @@
   "bugs": {
     "url": "https://github.com/wallacepreston/fitnesstrackr/issues"
   },
-  "homepage": "https://github.com/wallacepreston/fitnesstrackr#readme",
   "devDependencies": {
+    "@babel/eslint-parser": "^7.19.1",
     "eslint": "^8.2.0",
     "eslint-plugin-jest": "^25.2.4",
     "nodemon": "^2.0.4",

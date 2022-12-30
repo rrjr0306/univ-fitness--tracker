@@ -26,10 +26,9 @@ router.post('/login', async (req, res, next) => {
 
     try {
         const user = await getUserByUsername(username);
-        console.log("YOUSER", user)
+
         const token = jwt.sign({id: user.id, username: user.username}, JWT_SECRET, {expiresIn: '1y'})
 
-        console.log("USERTOKEN", token)
         if (user) {
 
             res.send({ user: user, message: "you're logged in!", token});
