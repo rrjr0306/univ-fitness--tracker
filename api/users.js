@@ -14,8 +14,8 @@ const { requireUser } = require("./utils")
 // POST /api/users/login
 
 router.post('/login', async (req, res, next) => {
-    const { username, password } = req.body;
-
+    const { username, password } = req.body.user;
+    console.log("UM", username, password)
     if (!username || !password) {
         next({
             error: 'IncorrectCredentialsError',
@@ -31,7 +31,7 @@ router.post('/login', async (req, res, next) => {
 
         if (user) {
 
-            res.send({ user: user, message: "you're logged in!", token});
+            res.send({ user, message: "you're logged in!", token});
         } else {
             next({
                 name: 'IncorrectCredentialsError',
@@ -46,7 +46,9 @@ router.post('/login', async (req, res, next) => {
 
 // POST /api/users/register
 router.post('/register', async (req, res, next) => {
-    const { username, password } = req.body;
+    const { username, password } = req.body.user;
+
+    console.log("UNMMMM", username, password)
     try {
         const _user = await getUserByUsername(username);
 
@@ -58,6 +60,7 @@ router.post('/register', async (req, res, next) => {
                 message: `User ${_user.username} is already taken.`
             });
         }
+        
 
         if (password.length < 8) {
             next({
@@ -70,7 +73,7 @@ router.post('/register', async (req, res, next) => {
             username,
             password
         });
-        const token= jwt.sign({
+        const token = jwt.sign({
             id: user.id,
             username: user.username
         }, JWT_SECRET, {
