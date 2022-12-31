@@ -7,7 +7,12 @@ const client = require('./db/client.js')
 client.connect();
 
 const cors = require('cors');
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    preflightContinue: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH' , 'DELETE', 'OPTIONS'],
+    origin: true
+}));
 
 const morgan = require('morgan');
 app.use(morgan('dev'));
