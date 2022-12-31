@@ -1,64 +1,57 @@
-const BASE_URL = "http://fitness-tracker-z419.onrender.com/api";
+const BASE_URL = "http://localhost:3000/api";
 
-const makeHeaders = (token) => {
-    const headers = {
-        "Content-Type": "application/json",
-    }
+// const makeHeaders = (token) => {
+//     const headers = {
+//         "Content-Type": "application/json",
+//     }
 
-    if (token) {
-        headers["Authorization"] = `Bearer ${token}`
-    }
+//     if (token) {
+//         headers["Authorization"] = `Bearer ${token}`
+//     }
 
-    return headers;
-};
+//     return headers;
+// };
 
-const callAPI = async (path, givenOptions = {}) => {
-    const {token, method, body} = givenOptions;
+// const callAPI = async (path, givenOptions = {}) => {
+//     const {token, method, body} = givenOptions;
 
-    const options = {
-        headers: makeHeaders(token)
-    }
+//     const options = {
+//         headers: makeHeaders(token)
+//     }
 
-    if (method) {
-        options.method = givenOptions.method;
-    }
+//     if (method) {
+//         options.method = givenOptions.method;
+//     }
 
-    if (body) {
-        options.body = JSON.stringify(givenOptions.body);
-    }
+//     if (body) {
+//         options.body = JSON.stringify(givenOptions.body);
+//     }
 
-    const response = await fetch(`${BASE_URL}${path}`, options);
-    const result = await response.json();
+//     const response = await fetch(`${BASE_URL}${path}`, options);
+//     const result = await response.json();
 
-    return result;
-}
+//     return result;
+// }
 
 export const fetchRegister = async (username, password) => {
     try {
 
-        const {success, error, data} = await callAPI(`/users/register`, {
+        const response = await fetch(`${BASE_URL}/users/register`, {
             method: "POST",
-            body: {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
                 user: {
                     username,
                     password
                 },
-            }
-        })
+            }),
+        });
 
-        if (success) {
-            return {
-                error: null,
-                token: data.token,
-                message: data.message
-            }
-        } else {
-            return {
-                error: error.message,
-                token: null,
-                message: null
-            }
-        }
+        const data = await response.json();
+        console.log("DATATA", response)
+        return data;
 
     } catch(error) {
         console.error("Error registering new user", error)
@@ -74,29 +67,22 @@ export const fetchRegister = async (username, password) => {
 export const fetchLogin = async (username, password) => {
     try {
        
-        const {success, error, data} = await callAPI(`/users/login`, {
+        const response = await fetch(`${BASE_URL}/users/login`, {
             method: "POST",
-            body: {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
                 user: {
                     username,
                     password
-                }
-            }
-        })
+                },
+            }),
+        });
 
-        if (success) {
-            return {
-                error: null,
-                token: data.token,
-                message: data.message
-            }
-        } else {
-            return {
-                error: error.message,
-                token: null,
-                message: null
-            }
-        }
+        const data = response.json();
+        console.log("DATA", data)
+        return data
     } catch(error) {
         console.error("There was an error logging in", error);
     }
@@ -104,28 +90,18 @@ export const fetchLogin = async (username, password) => {
 
 export const fetchGuest = async (token) => {
     try {
-        const {success, error, data} = await callAPI('/users/me', {
-            token: token
-        })
 
-        if (success) {
-            return {
-                error: null,
-                username: data.username,
-                message: data.message
+        const response = await fetch(`${BASE_URL}/users/me`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
             }
-        } else {
-            return {
-                error: error.message,
-                data: null
-            }
-        }
+        });
+
+        const data = response.json()
+        return data;
     } catch(error) {
         console.error('Failed to fetch guest!', error);
 
-        return {
-            error: "Failed to get guest",
-            data: null
-        }
     }
 }
