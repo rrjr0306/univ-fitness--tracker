@@ -1,44 +1,13 @@
-// import React from "react";
-
-// const Routines = () => {
-//     return (
-//         <>
-//         <h1>
-//             Routines
-//         </h1>
-       
-//         </>
-//     )
-// }
-
-// export default Routines;
-
-
-
 
 import React, { useState, useEffect } from "react";
-const baseUrl = 'https://fitness-tracker-z419.onrender.com/api'
+import { getRoutines } from "../api/api"
 
-export const getRoutines = async () => {
-    const url = `${baseUrl}/routines`;
-    try{
-        const response = await fetch(url, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json',
-            }           
-        })    
-    const json = await response.json()    
-    return json;
-} catch (error){console.error(error, "Something's wrong with getting routines!")}
-} 
+// const baseUrl = 'https://fitness-tracker-z419.onrender.com/api'
 
 const Routines = () => {
-    const [allRoutines, setAllRoutines] = useState({});
     const [routine, setRoutine] = useState([])
     useEffect(async() => {
       const gettingRoutines = await getRoutines();        
-        setAllRoutines(gettingRoutines);
         setRoutine(gettingRoutines)   
     }, []);
     console.log(routine)
@@ -66,3 +35,4 @@ const Routines = () => {
 };
 
 export default Routines;
+

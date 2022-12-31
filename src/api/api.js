@@ -105,3 +105,17 @@ export const fetchGuest = async (token) => {
 
     }
 }
+
+export const getRoutines = async () => {
+    const url = `${BASE_URL}/routines`;
+    try{
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+            }           
+        })    
+    const json = await response.json()    
+    return json;
+} catch (error){console.error(error, "Something's wrong with getting routines!")}
+} 
