@@ -1,26 +1,10 @@
-// import React from "react";
-
-// const Routines = () => {
-//     return (
-//         <>
-//         <h1>
-//             Routines
-//         </h1>
-       
-//         </>
-//     )
-// }
-
-// export default Routines;
-
-
 
 
 import React, { useState, useEffect } from "react";
-const baseUrl = 'https://fitness-tracker-z419.onrender.com/api'
+const BASE_URL = 'http://localhost:3000/api'
 
 export const getRoutines = async () => {
-    const url = `${baseUrl}/routines`;
+    const url = `${BASE_URL}/Routines`;
     try{
         const response = await fetch(url, {
             method: "GET",
@@ -34,11 +18,11 @@ export const getRoutines = async () => {
 } 
 
 const Routines = () => {
-    const [allRoutines, setAllRoutines] = useState({});
+    //const [allRoutines, setAllRoutines] = useState({});
     const [routine, setRoutine] = useState([])
     useEffect(async() => {
       const gettingRoutines = await getRoutines();        
-        setAllRoutines(gettingRoutines);
+        //setAllRoutines(gettingRoutines);
         setRoutine(gettingRoutines)   
     }, []);
     console.log(routine)
