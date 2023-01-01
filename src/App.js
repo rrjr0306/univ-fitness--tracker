@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {Home, Activities, Routines, Myroutines, AccountForm} from "./components";
+import {Home, Routines, Myroutines, AccountForm} from "./components";
 import {Link, Route, Switch, useHistory} from "react-router-dom";
 import {fetchGuest} from "./api/api"
 
 const App = () => {
 
-  const [username, setUsername] = useState(null)
+    const [username, setUsername] = useState(null)
     const [token, setToken] = useState(
         window.localStorage.getItem("token") || null
     );
@@ -49,9 +49,9 @@ const App = () => {
                 <Link to="/Routines">
                     Routines
                 </Link>
-                <Link to="/Myroutines">
+                {token? <Link to="/Myroutines">
                     My Routines
-                </Link>
+                </Link> : null}
                 <div className="right menu">
                     {token ? (
                         <button onClick={(event) => {
@@ -76,7 +76,7 @@ const App = () => {
                     <Home username={username}/>
                 </Route>
                 <Route path="/Activities">
-                    <Activities />
+                    {/* <Activities /> */}
                 </Route>
                 <Route path="/Routines">
                     <Routines />
