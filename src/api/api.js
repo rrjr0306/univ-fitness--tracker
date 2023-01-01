@@ -105,3 +105,56 @@ export const fetchGuest = async (token) => {
 
     }
 }
+
+export const getRoutines = async () => {
+    const url = `${BASE_URL}/routines`;
+    try{
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+            }           
+        })    
+    const json = await response.json()    
+    return json;
+} catch (error){console.error(error, "Something's wrong with getting routines!")}
+} 
+
+export const createRoutine = async (name, goal, isPublic, token) => {    
+    const url = `${BASE_URL}/routines`;
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            name,
+            goal,
+            isPublic,
+        })
+    });
+    const result = await response.json();
+    return result;
+};
+
+export const getUserRoutines = async() => {
+    const username = localStorage.getItem('username');
+    const url = `${BASE_URL}/MyRoutines`
+    const token = localStorage.getItem('token')
+
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }       
+        });
+
+        const result = await response.json();
+        return result
+    } catch (error) {
+        console.error("Error getting user's routines", error)
+    }
+}

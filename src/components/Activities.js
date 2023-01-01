@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { response } from "../../app";
-import { getAllActivities } from "../api";
+// import { response } from "../../app";
+// import { getAllActivities } from "../api";
 const BASE_URL = "http://fitness-tracker-z419.onrender.com/api"
 
 const Activities = (props) => {
-
     const [activities, setActivities] = useState([]);
 
     const getActivities = async () => {
@@ -15,11 +14,8 @@ const Activities = (props) => {
 
         const theActivities = await response.json();
         setActivities(response);
-    } catch (error) {
-        console.error(error)
-    }
+    } 
 
-        };
          useEffect(() => {
             getActivities()
         }, []);
@@ -44,7 +40,7 @@ const Activities = (props) => {
         </>
     )
     
-    
+    }
 
 
 
