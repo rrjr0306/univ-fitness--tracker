@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Home, Routines, Myroutines, AccountForm} from "./components";
 import {Link, Route, Switch, useHistory} from "react-router-dom";
 import {fetchGuest} from "./api/api"
+import ActivityCreateForm from "./components/CreateActivity";
 
 const App = () => {
 
@@ -40,6 +41,7 @@ const App = () => {
     return (
         <div>
             <nav>
+
                 <Link to="/">
                     Home
                 </Link>
@@ -52,6 +54,7 @@ const App = () => {
                 {token? <Link to="/Myroutines">
                     My Routines
                 </Link> : null}
+
                 <div className="right menu">
                     {token ? (
                         <button onClick={(event) => {
@@ -75,8 +78,10 @@ const App = () => {
                 <Route exact path="/" >
                     <Home username={username}/>
                 </Route>
-                <Route path="/Activities">
-                    {/* <Activities /> */}
+
+                <Route path="/activity/create">
+                    <ActivityCreateForm token={token} setActivity={setActivity} />
+
                 </Route>
                 <Route path="/Routines">
                     <Routines />

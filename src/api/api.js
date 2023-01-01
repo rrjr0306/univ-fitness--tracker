@@ -1,16 +1,16 @@
 const BASE_URL = "http://localhost:3000/api";
 
-// const makeHeaders = (token) => {
-//     const headers = {
-//         "Content-Type": "application/json",
-//     }
+const makeHeaders = (token) => {
+    const headers = {
+        "Content-Type": "application/json",
+    }
 
-//     if (token) {
-//         headers["Authorization"] = `Bearer ${token}`
-//     }
+    if (token) {
+        headers["Authorization"] = `Bearer ${token}`
+    }
 
-//     return headers;
-// };
+    return headers;
+};
 
 // const callAPI = async (path, givenOptions = {}) => {
 //     const {token, method, body} = givenOptions;
@@ -106,6 +106,20 @@ export const fetchGuest = async (token) => {
     }
 }
 
+
+export const getAllActivities = async (token) => {
+    try {
+        const response = await fetch (`${BASE_URL}/activities`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            }
+        });
+        const {data} = await response.json();
+        return data.activity;
+    } catch(error) {
+        console.error("Error getting activities")}
+        }
+
 export const getRoutines = async () => {
     const url = `${BASE_URL}/routines`;
     try{
@@ -156,5 +170,6 @@ export const getUserRoutines = async() => {
         return result
     } catch (error) {
         console.error("Error getting user's routines", error)
+
     }
 }

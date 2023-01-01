@@ -8,6 +8,7 @@ const Routines = () => {
     const [routine, setRoutine] = useState([])
     useEffect(async() => {
       const gettingRoutines = await getRoutines();        
+
         setRoutine(gettingRoutines)   
     }, []);
     console.log(routine)
