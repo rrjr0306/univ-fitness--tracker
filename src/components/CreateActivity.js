@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
- import { createActivity } from "../api/api";
+//  import { createActivity } from "../api/api";
 
 const ActivityCreateForm = ({token, setActivity}) => {
     const history = useHistory();

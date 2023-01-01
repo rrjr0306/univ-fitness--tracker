@@ -1,38 +1,5 @@
 const BASE_URL = "http://localhost:3000/api";
 
-const makeHeaders = (token) => {
-    const headers = {
-        "Content-Type": "application/json",
-    }
-
-    if (token) {
-        headers["Authorization"] = `Bearer ${token}`
-    }
-
-    return headers;
-};
-
-// const callAPI = async (path, givenOptions = {}) => {
-//     const {token, method, body} = givenOptions;
-
-//     const options = {
-//         headers: makeHeaders(token)
-//     }
-
-//     if (method) {
-//         options.method = givenOptions.method;
-//     }
-
-//     if (body) {
-//         options.body = JSON.stringify(givenOptions.body);
-//     }
-
-//     const response = await fetch(`${BASE_URL}${path}`, options);
-//     const result = await response.json();
-
-//     return result;
-// }
-
 export const fetchRegister = async (username, password) => {
     try {
 
@@ -107,18 +74,19 @@ export const fetchGuest = async (token) => {
 }
 
 
-export const getAllActivities = async (token) => {
+export const fetchActivities = async () => {
     try {
         const response = await fetch (`${BASE_URL}/activities`, {
             headers: {
-                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
             }
         });
-        const {data} = await response.json();
-        return data.activity;
+        const data = await response.json();
+        return data;
     } catch(error) {
-        console.error("Error getting activities")}
-        }
+        console.error("Error getting activities")
+    }
+}
 
 export const getRoutines = async () => {
     const url = `${BASE_URL}/routines`;
@@ -153,7 +121,7 @@ export const createRoutine = async (name, goal, isPublic, token) => {
 };
 
 export const getUserRoutines = async() => {
-    const username = localStorage.getItem('username');
+    // const username = localStorage.getItem('username');
     const url = `${BASE_URL}/MyRoutines`
     const token = localStorage.getItem('token')
 

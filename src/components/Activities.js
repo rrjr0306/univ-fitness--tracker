@@ -1,47 +1,47 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import { Link } from "react-router-dom";
 
 //import { response } from "../../app";
 //import { getAllActivities } from "../api";
-const BASE_URL = "http://localhost:3000/api"
 
 
-const Activities = ({ activity, setActivity, token }) => {
-    console.log("activity", activity);
-}
 
-const handleDeleteClick = async (activityId) => {
-   await setActivity((prevActivities) =>
-    prevActivities.filter((item) => item._id !== activityId)
-    );
+const Activities = ({ activity }) => {
+    // const handleDeleteClick = async (activityId) => {
+    //     await setActivity((prevActivities) =>
+    //      prevActivities.filter((item) => item._id !== activityId)
+    //      );
+     
+     
+     return ( 
+     <>
+     
+     <Link to="/createactivity" className="ui button">
+         Create Activity
+         </Link>
+         <div className="posts-container">
+             {activity.map((item) => {
+                 return (
+                 <ActivityItem key={item._id} item={item} headerElement={
+                      item.isAuthor ?
+             <div className="right floated aligned tiny header">Mine</div>
+             : null
+         }>
+             
+             
+                 </ActivityItem>
+                 )
+             
+             })} 
+         </div>
+             </>
+     )
+         
+     };
 
 
-return ( 
-<>
-
-<Link to="/createactivity" className="ui button">
-    Create Activity
-    </Link>
-    <div className="posts-container">
-        {activity.map((item) => {
-            return (
-            <ActivityItem key={item._id} item={item} headerElement={
-                 item.isAuthor ?
-        <div className="right floated aligned tiny header">Mine</div>
-        : null
-    }>
-        
-        
-            </ActivityItem>
-            )
-        
-        })} 
-    </div>
-        </>
-)
     
-};    
 
 
 
@@ -100,7 +100,6 @@ return (
 //         </>
 //     )}
     
-    }
 
 
 

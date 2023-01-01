@@ -1,17 +1,30 @@
 import React, {useEffect, useState} from "react";
-import {Home, Routines, Myroutines, AccountForm} from "./components";
+import {Home, Routines, Myroutines, AccountForm, Activities} from "./components";
 import {Link, Route, Switch, useHistory} from "react-router-dom";
-import {fetchGuest} from "./api/api"
-import ActivityCreateForm from "./components/CreateActivity";
+import {fetchGuest, fetchActivities} from "./api/api"
+// import ActivityCreateForm from "./components/CreateActivity";
 
 const App = () => {
 
+    const [activity, setActivity] = useState()
     const [username, setUsername] = useState(null)
     const [token, setToken] = useState(
         window.localStorage.getItem("token") || null
     );
 
     const history = useHistory();
+
+    useEffect(() => {
+        const getActivities = async () => {
+            const {error, activity} = await fetchActivities();
+
+                if (error) {
+                    console.error(error);
+                }
+                setActivity(activity);
+            }
+        getActivities();
+    }, [])
 
     useEffect(() => {
         if (token) {
@@ -78,11 +91,12 @@ const App = () => {
                 <Route exact path="/" >
                     <Home username={username}/>
                 </Route>
-
-                <Route path="/activity/create">
-                    <ActivityCreateForm token={token} setActivity={setActivity} />
-
+                <Route path="/Activities">
+                    <Activities activity={activity} />
                 </Route>
+                {/* <Route path="/activity/create">
+                    <ActivityCreateForm token={token} setActivity={setActivity} />
+                </Route> */}
                 <Route path="/Routines">
                     <Routines />
                 </Route>
