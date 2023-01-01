@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
-import {Home, Activities, Routines, Myroutines, AccountForm} from "./components";
+import {Home, Routines, Myroutines, AccountForm} from "./components";
 import {Link, Route, Switch, useHistory} from "react-router-dom";
 import {fetchGuest} from "./api/api"
 import ActivityCreateForm from "./components/CreateActivity";
 
 const App = () => {
 
-  const [username, setUsername] = useState(null)
+    const [username, setUsername] = useState(null)
     const [token, setToken] = useState(
         window.localStorage.getItem("token") || null
     );
@@ -41,10 +41,20 @@ const App = () => {
     return (
         <div>
             <nav>
-                <Link to="/">Home</Link>
-                <Link to="/Activities">Activities</Link>
-                <Link to="/Routines">Routines</Link>
-                <Link to="/Myroutines">My Routines</Link>
+
+                <Link to="/">
+                    Home
+                </Link>
+                <Link to="/Activities">
+                    Activities
+                </Link>
+                <Link to="/Routines">
+                    Routines
+                </Link>
+                {token? <Link to="/Myroutines">
+                    My Routines
+                </Link> : null}
+
                 <div className="right menu">
                     {token ? (
                         <button onClick={(event) => {
@@ -68,8 +78,10 @@ const App = () => {
                 <Route exact path="/" >
                     <Home username={username}/>
                 </Route>
+
                 <Route path="/activity/create">
                     <ActivityCreateForm token={token} setActivity={setActivity} />
+
                 </Route>
                 <Route path="/Routines">
                     <Routines />

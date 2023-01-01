@@ -1,28 +1,14 @@
 
-
 import React, { useState, useEffect } from "react";
-const BASE_URL = 'http://localhost:3000/api'
+import { getRoutines } from "../api/api"
 
-export const getRoutines = async () => {
-    const url = `${BASE_URL}/Routines`;
-    try{
-        const response = await fetch(url, {
-            method: "GET",
-            headers: {
-                'Content-Type': 'application/json',
-            }           
-        })    
-    const json = await response.json()    
-    return json;
-} catch (error){console.error(error, "Something's wrong with getting routines!")}
-} 
+// const baseUrl = 'https://fitness-tracker-z419.onrender.com/api'
 
 const Routines = () => {
-    //const [allRoutines, setAllRoutines] = useState({});
     const [routine, setRoutine] = useState([])
     useEffect(async() => {
       const gettingRoutines = await getRoutines();        
-        //setAllRoutines(gettingRoutines);
+
         setRoutine(gettingRoutines)   
     }, []);
     console.log(routine)
@@ -50,3 +36,4 @@ const Routines = () => {
 };
 
 export default Routines;
+
