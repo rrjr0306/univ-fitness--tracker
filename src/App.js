@@ -2,12 +2,12 @@ import React, {useEffect, useState} from "react";
 import {Home, Routines, Myroutines, AccountForm, Activities} from "./components";
 import {Link, Route, Switch, useHistory} from "react-router-dom";
 import {fetchGuest, fetchActivities} from "./api/api"
-// import ActivityCreateForm from "./components/CreateActivity";
+
 
 const App = () => {
 
-    const [activity, setActivity] = useState()
-    const [username, setUsername] = useState(null)
+    const [activities, setActivities] = useState([]);
+    const [username, setUsername] = useState(null);
     const [token, setToken] = useState(
         window.localStorage.getItem("token") || null
     );
@@ -16,14 +16,15 @@ const App = () => {
 
     useEffect(() => {
         const getActivities = async () => {
-            const {error, activity} = await fetchActivities();
-
-                if (error) {
-                    console.error(error);
-                }
-                setActivity(activity);
+            try{
+                const result = await fetchActivities();
+                setActivities(result);
+            } catch(error) {
+                console.error("There was an error fetching activities", error)
             }
+        }
         getActivities();
+        
     }, [])
 
     useEffect(() => {
@@ -92,7 +93,10 @@ const App = () => {
                     <Home username={username}/>
                 </Route>
                 <Route path="/Activities">
-                    <Activities activity={activity} />
+                    <Activities activities={activities} />
+                </Route>
+                <Route path="/Activities/create">
+
                 </Route>
                 {/* <Route path="/activity/create">
                     <ActivityCreateForm token={token} setActivity={setActivity} />
