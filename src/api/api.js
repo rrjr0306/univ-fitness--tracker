@@ -73,18 +73,19 @@ export const fetchGuest = async (token) => {
     }
 }
 
-
 export const fetchActivities = async () => {
     try {
-        const response = await fetch (`${BASE_URL}/activities`, {
+        const response = await fetch(`${BASE_URL}/activities`, {
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/json"
             }
-        });
-        const data = await response.json();
+        })
+        
+        const data = await response.json()
+        console.log("DATA", data)
         return data;
     } catch(error) {
-        console.error("Error getting activities")
+        console.error("There was an error fetching activities", error)
     }
 }
 
