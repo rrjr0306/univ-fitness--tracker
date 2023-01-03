@@ -7,10 +7,12 @@ const MyRoutines = ({ token, routines }) => {
   
   const [userRoutines, setUserRoutines] = useState([]);
 
+
+
   const deleteHandler = async (event) => {
     event.preventDefault();
-    const deletedRoutine = await deleteRoutine(token, routine)
-    return deletedRoutine
+    const routine = userRoutines[0].id
+    await deleteRoutine(token, routine)
   }
   
   useEffect(async() => {
@@ -18,9 +20,12 @@ const MyRoutines = ({ token, routines }) => {
     setUserRoutines(gettingUserRoutines)
   }, [])
 
+  
+
+  console.log('routines!!!!', routines.id)
 
 
-
+  //need routines.id for line 50 in event handler
     
   return (
     <div>
@@ -40,8 +45,9 @@ const MyRoutines = ({ token, routines }) => {
                         </div>
                         )}
                 </div>
-                <div onSubmit={(event) => deleteHandler(e, {token, routine})}>
-                <button type='submit'>Delete</button>
+                <div >
+                
+                <button onClick={(event) => deleteHandler(event, { token, routines })} type='submit'>Delete</button>
                 </div>      
               </div>
             </div>
