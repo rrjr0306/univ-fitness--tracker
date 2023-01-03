@@ -34,6 +34,7 @@ const App = () => {
                 const {username} = await fetchGuest(token);
                 console.log("RESULT", username)
                 setUsername(username)
+                window.localStorage.setItem("username", username)
             };
             getGuest();
         }
@@ -117,7 +118,7 @@ const App = () => {
                     <EditMyRoutines token={token} />
                 </Route>
                 <Route path="/MyRoutines">
-                    <MyRoutines routines={routines} token={token}/>
+                    <MyRoutines username={username} routines={routines} token={token}/>
                 </Route>
                 <Route path="/AccountForm/:action">
                     <AccountForm setToken={setToken}/>

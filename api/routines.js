@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-catch */
 const express = require('express');
-const { getAllRoutines, createRoutine, getRoutineActivityById, getRoutineById, updateRoutine, destroyRoutine, addActivityToRoutine } = require('../db');
+const { getAllPublicRoutines, createRoutine, getRoutineActivityById, getRoutineById, updateRoutine, destroyRoutine, addActivityToRoutine } = require('../db');
 const router = express.Router();
 const { requireUser } = require('./utils');
 
@@ -8,7 +8,7 @@ const { requireUser } = require('./utils');
 
 router.get('/', async (req, res, next) => {
     try {
-        const allRoutines = await getAllRoutines();
+        const allRoutines = await getAllPublicRoutines();
         res.send(allRoutines);
     } catch ({ name, message }) {
         next ({ name, message }); 
