@@ -12,7 +12,7 @@ const EditMyRoutines = ({token}) => {
 
     useEffect(async() => {
         const updatingRoutines = async () => {
-            const result = await updateRoutines(token);
+            const result = await updateRoutine(token);
             setNewRoutine(result)
         };
         updatingRoutines();

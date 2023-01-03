@@ -143,10 +143,9 @@ export const createRoutine = async (name, goal, isPublic) => {
     return result;
 };
 
-export const getUserRoutines = async() => {
+export const getUserRoutines = async(token) => {
     // const username = localStorage.getItem('username');
     const url = `${BASE_URL}/MyRoutines`
-    const token = localStorage.getItem('token')
 
     try {
         const response = await fetch(url, {

@@ -1,7 +1,5 @@
-
 import React from "react";
-
-// const baseUrl = 'https://fitness-tracker-z419.onrender.com/api'
+import { Link } from "react-router-dom";
 
 const Routines = ({routines}) => {
     
@@ -10,6 +8,7 @@ const Routines = ({routines}) => {
     
   return (
         <div>
+            <Link to="Routines/create">Create your own Routine!</Link>
             {routines.map(content => 
                 <div key={content.id}>
                     <h2>Routine Creator - {content.creatorName}</h2>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { createRoutine, getUserRoutines } from "../api/api"; 
 
-const CreateRoutine = (props) => {
+const CreateRoutine = () => {
     const { newRoutine, setNewRoutine } = useState("");    
     const [ newGoal, setNewGoal ] = useState("");
     const [ newIsPublic, setNewIsPublic ] = useState(false)    
@@ -24,8 +24,8 @@ const CreateRoutine = (props) => {
     }
     console.log('username??!??!', newRoutine )
     return (
-        <>
-            <div>
+        <div>
+            <form onSubmit={handleOnSubmit}>
                 <input
                     placeholder="Routine Name"
                     value={newRoutine}
@@ -43,9 +43,9 @@ const CreateRoutine = (props) => {
                     onChange={(event) => setNewIsPublic(event.target.checked)}
                 />
                 </div>
-                <button onClick={handleOnSubmit}>Create New Routine</button>
-            </div>
-        </>
+                <button type="submit">Create New Routine</button>
+            </form>
+        </div>
         
         )
     }
