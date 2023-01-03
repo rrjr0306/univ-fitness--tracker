@@ -1,0 +1,15 @@
+*{
+    font-family: monospace;
+    background-color: black;
+    color: gray;
+}
+h1{
+    
+    text-align: center;
+}
+.home{
+    display: flex;
+    align-items: center;
+flex-direction: column;
+
+}
