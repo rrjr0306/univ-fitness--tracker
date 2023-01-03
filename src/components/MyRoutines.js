@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getUserRoutines } from "../api/api";
+import { getUserRoutines, deleteRoutine } from "../api/api";
 
 const MyRoutines = ({ token, routines }) => {
   console.log('ROUTINES111', routines)
@@ -7,15 +7,21 @@ const MyRoutines = ({ token, routines }) => {
   
   const [userRoutines, setUserRoutines] = useState([]);
 
-console.log('username!!', username)
-    useEffect(async() => {
-      const gettingUserRoutines = await getUserRoutines(token, username);
-      setUserRoutines(gettingUserRoutines)
-    }, [])
+  const deleteHandler = async (event) => {
+    event.preventDefault();
+    const deletedRoutine = await deleteRoutine(token, routine)
+    return deletedRoutine
+  }
+  
+  useEffect(async() => {
+    const gettingUserRoutines = await getUserRoutines(token, username);
+    setUserRoutines(gettingUserRoutines)
+  }, [])
 
-   
+
+
+
     
-     console.log('USERROUTINES', userRoutines)
   return (
     <div>
         { userRoutines ? userRoutines.map(content =>
@@ -31,7 +37,10 @@ console.log('username!!', username)
                             <p>Duration and Count - {activity.duration} , {activity.count}</p>
                         </div>
                         )}
-                </div>                 
+                </div>
+                <div onSubmit={(event) => deleteHandler(e, {token, routine})}>
+                <button type='submit'>Delete</button>
+                </div>      
             </div>
             ) : <div>
                   <h3>

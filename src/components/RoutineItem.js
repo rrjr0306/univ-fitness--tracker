@@ -2,8 +2,8 @@ import React from 'react';
 
 import ActivityItem from "./ActivityItem";
 
-const RoutineItem = ({ children, routine }) => {
-    console.log('each routine goes here', routine)
+const RoutineItem = ({ children, routines }) => {
+    console.log('each routine goes here', routines)
     return ( 
          <div>
             <span><h3>{routine.name}</h3></span>
