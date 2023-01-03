@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { updateRoutine, getUserRoutines } from "../api/api"; 
+import { createRoutine, updateRoutine } from "../api/api"; 
 
 
+const EditMyRoutines = ({token}) => {
+    const { newRoutine, setNewRoutine } = useState("");    
+    const [ newGoal, setNewGoal ] = useState("");
+    const [ newIsPublic, setNewIsPublic ] = useState(false)    
+    const [ routine, setRoutine ] = useState([])
 
 const EditMyRoutines = ({ routine }) => {
     const token = localStorage.getItem('Token')
@@ -11,11 +16,16 @@ const EditMyRoutines = ({ routine }) => {
  
     const editFields = { token, routine }
 
-    console.log('what is routine?!', routine)
 
-    useEffect(() => {
-    
-    }, []);
+    useEffect(async() => {
+        const updatingRoutines = async () => {
+            const result = await updateRoutines(token);
+            setNewRoutine(result)
+        };
+        updatingRoutines();
+
+    }, [token]);
+
 
 
     const submitUpdate = async (event) => {
