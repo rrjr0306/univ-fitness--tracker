@@ -63,34 +63,33 @@ const App = () => {
     }
 
     return (
-        <div>
-            <nav>
-
-                <Link to="/">
+        <div className="container">
+            <nav className="ui secondary menu">
+                <Link className="item" style={{color: "white"}} to="/">
                     Home
                 </Link>
-                <Link to="/Activities">
+                <Link className="item" style={{color: "white"}} to="/Activities">
                     Activities
                 </Link>
-                <Link to="/Routines">
+                <Link className="item" style={{color:"white"}} to="/Routines">
                     Routines
                 </Link>
-                {token? <Link to="/Myroutines">
+                {token? <Link className="item" style={{color: "white"}} to="/Myroutines">
                     My Routines
                 </Link> : null}
 
                 <div className="right menu">
                     {token ? (
-                        <button onClick={(event) => {
+                        <button className="ui item" style={{color: "white"}} onClick={(event) => {
                             event.preventDefault();
                             logOut();
                         }}>Log Out</button>
                     ):(
                     <>
-                        <Link to="/AccountForm/login">
+                        <Link className="ui item" style={{color: "white"}} to="/AccountForm/login">
                             Log In
                         </Link>
-                        <Link to="/AccountForm/register">
+                        <Link className="ui item" style={{color: "white"}} to="/AccountForm/register">
                             Sign Up    
                         </Link>    
                     </>
