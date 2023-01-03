@@ -1,56 +1,37 @@
+
 import React, { useState, useEffect } from "react";
-import { createRoutine, getUserRoutines } from "../api/api"; 
-import { useParams } from "react-router-dom";
+import { getRoutines, getUserRoutines } from "../api/api"
 
-const MyRoutines = (props) => {
-    const { token } = props;
-    const { newRoutine, setNewRoutine } = useState("");    
-    const [ newGoal, setNewGoal ] = useState("");
-    const [ newIsPublic, setNewIsPublic ] = useState(false)    
-    const [ routine, setRoutine ] = useState([])
-
-    console.log('myroutines..', newRoutine)
-
+const Routines = () => {
+    const [routine, setRoutine] = useState([])
     useEffect(async() => {
-        const gettingRoutines = await getUserRoutines();
-        setRoutine(gettingRoutines)
+      const gettingRoutines = await getRoutines();        
+
+        setRoutine(gettingRoutines)   
     }, []);
-
-    const handleOnSubmit = async (event) => {
-        event.preventDefault();
-        const submitRoutine = await createRoutine(newRoutine, newGoal, newIsPublic);
-        setNewRoutine("");
-        setNewGoal("");
-        setNewIsPublic("");
-        setRoutine([routineSubmit, ...routine])
-    }
-
-    return(
-        <>
-            <div>
-                <input
-                    placeholder="Routine Name"
-                    value={newRoutine}
-                    onChange={(event) => setNewRoutine(event.target.value)}>
-                </input>
-                <input
-                    placeholder="Goal"
-                    value={newGoal}
-                    onChange={(event) => setNewGoal(event.target.value)}>
-                </input>
-                
-                <input               
-                    type="checkbox"                
-                    checked={newIsPublic}                
-                    onChange={(event) => setNewIsPublic(event.target.checked)}
-                />
-                <button onClick={handleOnSubmit}>Create New Routine</button>
+    console.log(routine)
+    
+  return (
+    <div>
+        {routine.map(content =>
+            <div key={content.id}>
+               <h2>Routine Creator - {content.creatorName}</h2>
+                <p>Name - {content.name}</p>
+                <p>Goal - {content.goal}</p>
+                <div>
+                    {content.activities.map(activity =>
+                        <div key={activity.id}>
+                            <h3>Activity name - {activity.name}</h3>
+                            <p>Activity discription - {activity.description}</p>
+                            <p>Duration and Count - {activity.duration} , {activity.count}</p>
+                        </div>
+                        )}
+                </div>                 
             </div>
-        </>
-        
-        )
-    }
+            )}
+    </div>
+  );
+};
 
+export default Routines;
 
-
-export default MyRoutines;
