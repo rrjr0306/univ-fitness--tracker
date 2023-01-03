@@ -1,19 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getUserRoutines } from "../api/api";
 
-const MyRoutines = ({routines}) => {
+const MyRoutines = ({ token, routines }) => {
+  console.log('ROUTINES111', routines)
+  const username = window.localStorage.getItem("username")
+  
+  const [userRoutines, setUserRoutines] = useState([]);
+
+console.log('username!!', username)
+    useEffect(async() => {
+      const gettingUserRoutines = await getUserRoutines(token, username);
+      setUserRoutines(gettingUserRoutines)
+    }, [])
+
+   
     
-    // useEffect(async() => {
-    //   const gettingUserRoutines = async () => {      
-    //     const result = await getUserRoutines(token)
-    //     setRoutines(result);
-    //   }
-    //   gettingUserRoutines();
-    // }, [token]);
-    // console.log(routines)
-    
+     console.log('USERROUTINES', userRoutines)
   return (
     <div>
-        {routines.map(content =>
+        { userRoutines ? userRoutines.map(content =>
             <div key={content.id}>
                <h2>Routine Creator - {content.creatorName}</h2>
                 <p>Name - {content.name}</p>
@@ -28,7 +33,12 @@ const MyRoutines = ({routines}) => {
                         )}
                 </div>                 
             </div>
-            )}
+            ) : <div>
+                  <h3>
+                    No User Routines
+                  </h3>
+                </div>
+                }
     </div>
   );
 };

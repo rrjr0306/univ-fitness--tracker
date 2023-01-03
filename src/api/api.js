@@ -143,9 +143,8 @@ export const createRoutine = async (name, goal, isPublic) => {
     return result;
 };
 
-export const getUserRoutines = async(token) => {
-    // const username = localStorage.getItem('username');
-    const url = `${BASE_URL}/MyRoutines`
+export const getUserRoutines = async(token, username) => {
+    const url = `${BASE_URL}/users/${username}/routines`
 
     try {
         const response = await fetch(url, {
@@ -155,11 +154,11 @@ export const getUserRoutines = async(token) => {
                 'Authorization': `Bearer ${token}`
             }       
         });
-
+        console.log('hellloooooooo')
         const result = await response.json();
         return result
     } catch (error) {
-        console.error("Error getting user's routines", error)
+        console.error("Error getting user's routines")
 
     }
 }

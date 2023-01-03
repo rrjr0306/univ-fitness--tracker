@@ -77,6 +77,6 @@ const EditMyRoutines = ({ routine }) => {
         )
     }
 
-
+}
 
 export default EditMyRoutines;
