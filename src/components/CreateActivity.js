@@ -1,50 +1,54 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import { useHistory } from "react-router-dom";
-//  import { createActivity } from "../api/api";
+import {createActivities} from "../api/api";
 
-const ActivityCreateForm = ({token, setActivity}) => {
+const CreateActivity = ({setActivities}) => {
+    
     const history = useHistory();
-    const [name, setName] = useState('');
-     const [description, setDescripton] = useState('');
-     
-    const [errorMessage, setErrorMessage] = useState(null);
+    const [name, setName] = useState("")
+    const [description, setDescription] = useState("");
 
+    return (
+        <div>
+            <form onSubmit={async (event) => {
+                event.preventDefault();
 
-return (<form className="ui form" onSubmit={async (event)=> {
-    event.preventDefault();
-    
+                const result = await createActivities(name, description)
 
-    const {error, activity} = await createActivity(token, name, description);
+                
+                setActivities((prevActivities) => [...prevActivities, result]);
+                setName("");
+                setDescription("");
+                history.push("/Activities")
+                
+            }}>
+                <h4>Create your own Activity</h4>
+                <div>
+                    <label htmlFor="name">Name of Activity</label>
+                    <input 
+                        onChange={(event) => {setName(event.target.value)}}
+                        value={name}
+                        type="text"
+                        placeholder="Name your Activity!"
+                        required
+                    ></input>
+                </div>
 
-    if (activity) {
-        setActivity((prevActivities) => [...prevActivities, activity])
-        setName('');
-        setDescripton('');
-        history.push('/activities');
-    } else {
-        setErrorMessage(error);
-    }
-    
-    
-}}>
-<h3>Create A New Activity!</h3>
+                <div>
+                    <label htmlFor="description">In a few words, walk us through your Activity</label>
+                    <input
+                        onChange={(event) => {setDescription(event.target.value)}} 
+                        value={description}
+                        type="text"
+                        placeholder="Description"
+                        required
+                    ></input>
+                </div>
 
-<div className="field">
-<label htmlFor="title">Name</label>
-<input type="text" placeholder="The Name of Activity" required autoComplete="off"
-value={name}
-onChange={(event) =>setTitle(event.target.value)}></input>
-</div>
+                <button type="submit">Create Activity</button>
+            </form>
+        </div>
+    )
+}
 
-<div className="field">
-<label htmlFor="description">Description</label>
-<input type="text" placeholder="A Description of Activity" required autoComplete="off"
-value={description}
-onChange={(event) => setDescripton(event.target.value)}></input>
-</div>
-    
-<button type="submit" className="ui button">Create</button>
-</form>)
-};
-
- export default ActivityCreateForm;
+export default CreateActivity

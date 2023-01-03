@@ -1,22 +1,21 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import ActivityItem from "./ActivityItem";
 
-//import { response } from "../../app";
-//import { getAllActivities } from "../api";
+const Activities = ({activities, setActivities, token}) => {
 
-
-
-const Activities = ({activities}) => {
-
-    console.log("ACTIVITIES", activities)
-    return (
-        
+    return (<>
+        {token ? <Link to="/Activities/create">Create Activity</Link> : null}
         <div>
             {activities.map((activity) => {
-                return <ActivityItem key={activity.id} activities={activity}/>
+                return <ActivityItem 
+                    key={activity.id} 
+                    activities={activity}
+                    setActivities={setActivities}
+                    />
             })}
         </div>
-    )
+    </>)
          
 };
 

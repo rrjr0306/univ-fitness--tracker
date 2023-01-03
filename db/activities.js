@@ -8,7 +8,6 @@ async function getAllActivities() {
     const {rows} = await client.query(`
       SELECT * FROM activities;
     `);
-    
     return rows;
   } catch(error) {
     throw error;

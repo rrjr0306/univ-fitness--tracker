@@ -89,6 +89,27 @@ export const fetchActivities = async () => {
     }
 }
 
+export const createActivities = async (name, description) => {
+    try {
+        const response = await fetch(`${BASE_URL}/activities`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name, 
+                description
+            })
+        })
+
+        const data = await response.json();
+        console.log("THIS IS ", data)
+        return data;
+    } catch(error) {
+        console.error("There was an error creating posts", error)
+    }
+}
+
 export const getRoutines = async () => {
     const url = `${BASE_URL}/routines`;
     try{
