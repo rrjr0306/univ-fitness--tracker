@@ -5,7 +5,7 @@ import { getRoutines, getUserRoutines } from "../api/api"
 const Routines = () => {
     const [routine, setRoutine] = useState([])
     useEffect(async() => {
-      const gettingRoutines = await getRoutines();        
+      const gettingRoutines = await getUserRoutines();        
 
         setRoutine(gettingRoutines)   
     }, []);
