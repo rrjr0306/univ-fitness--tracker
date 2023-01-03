@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { createRoutine, getUserRoutines } from "../api/api"; 
+import { createRoutine, updateRoutine } from "../api/api"; 
 
 
-const EditMyRoutines = (props) => {
+const EditMyRoutines = ({token}) => {
     const { newRoutine, setNewRoutine } = useState("");    
     const [ newGoal, setNewGoal ] = useState("");
     const [ newIsPublic, setNewIsPublic ] = useState(false)    
@@ -11,9 +11,13 @@ const EditMyRoutines = (props) => {
     console.log('myroutines..', newRoutine)
 
     useEffect(async() => {
-        const gettingRoutines = await getUserRoutines();
-        setRoutine(gettingRoutines)
-    }, []);
+        const updatingRoutines = async () => {
+            const result = await updateRoutines(token);
+            setNewRoutine(result)
+        };
+        updatingRoutines();
+
+    }, [token]);
 
     const handleOnSubmit = async (event) => {
         event.preventDefault();

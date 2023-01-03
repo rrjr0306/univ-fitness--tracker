@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {Home, Routines, Myroutines, AccountForm, Activities, CreateActivity} from "./components";
+import {Home, Routines, Myroutines, AccountForm, Activities, CreateActivity, CreateRoutine} from "./components";
 import {Link, Route, Switch, useHistory} from "react-router-dom";
-import {fetchGuest, fetchActivities} from "./api/api"
+import {fetchGuest, fetchActivities, getRoutines} from "./api/api"
 
 
 const App = () => {
 
     const [activities, setActivities] = useState([]);
+    const [routines, setRoutines] = useState([]);
     const [username, setUsername] = useState(null);
     const [token, setToken] = useState(
         window.localStorage.getItem("token") || null
@@ -37,6 +38,14 @@ const App = () => {
             getGuest();
         }
     }, [token])
+
+    useEffect(() => {
+        const gettingRoutines = async () => { 
+            const result = await getRoutines();     
+            setRoutines(result);
+        }
+        gettingRoutines();   
+      }, []);
 
     useEffect(() => {
         if (token) {
@@ -98,8 +107,14 @@ const App = () => {
                 <Route path="/Activities">
                     <Activities activities={activities} setActivities={setActivities} token={token} />
                 </Route>
+                <Route path="/Routines/create">
+                    <CreateRoutine />
+                </Route>
                 <Route path="/Routines">
-                    <Routines />
+                    <Routines routines={routines} token={token}/>
+                </Route>
+                <Route path="Myroutines/edit">
+                    <EditMyRoutines token={token}/>
                 </Route>
                 <Route path="/Myroutines">
                     <Myroutines />
