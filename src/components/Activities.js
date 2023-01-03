@@ -5,8 +5,9 @@ import ActivityItem from "./ActivityItem";
 const Activities = ({activities, setActivities, token}) => {
 
     return (<>
-        {token ? <Link to="/Activities/create">Create Activity</Link> : null}
+        {token ? <Link className="fluid ui button" to="/Activities/create">Create Activity</Link> : null}
         <div>
+            <h1>Activities</h1>
             {activities.map((activity) => {
                 return <ActivityItem 
                     key={activity.id} 

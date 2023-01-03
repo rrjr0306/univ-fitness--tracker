@@ -30,36 +30,38 @@ const AccountForm = ({setToken}) => {
     const title = action === "login" ? "Log In" : "Sign Up";
 
     return(
-        <form onSubmit={onSubmitHandler}>
-            <h1>{title}</h1>
-            <div>
-                <label>Username</label>
-                    <input 
-                    type="text" 
-                    value={username} 
-                    placeholder="username" 
-                    required
-                    onChange={(event) => {
-                        setUsername(event.target.value)
-                    }}
-                    />
-            </div>
-            <div>
-                <label>Password</label>
-                    <input 
-                    type="password" 
-                    value={password} 
-                    placeholder="password" 
-                    minLength="8"
-                    required
-                    onChange={(event) => {
-                        setPassword(event.target.value)
-                    }}/>
-            </div>
-            <button type="submit">
-                {title}
-            </button>
-        </form>
+        <div className="ui inverted segment">
+            <form className="ui inverted form" onSubmit={onSubmitHandler}>
+                <h1>{title}</h1>
+                <div className="field">
+                    <label>Username</label>
+                        <input 
+                        type="text" 
+                        value={username} 
+                        placeholder="username" 
+                        required
+                        onChange={(event) => {
+                            setUsername(event.target.value)
+                        }}
+                        />
+                </div>
+                <div className="field">
+                    <label>Password</label>
+                        <input 
+                        type="password" 
+                        value={password} 
+                        placeholder="password" 
+                        minLength="8"
+                        required
+                        onChange={(event) => {
+                            setPassword(event.target.value)
+                        }}/>
+                </div>
+                <button className="ui button" type="submit">
+                    {title}
+                </button>
+            </form>
+        </div>
     )
 }
 
