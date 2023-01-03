@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Home, Routines, MyRoutines, AccountForm, Activities, CreateActivity, CreateRoutine, EditMyRoutines} from "./components";
+import {Home, Routines, MyRoutines, AccountForm, Activities, CreateActivity, CreateRoutine, RoutineItem, EditMyRoutines} from "./components";
 import {Link, Route, Switch, useHistory} from "react-router-dom";
 import {fetchGuest, fetchActivities, getRoutines} from "./api/api"
 
@@ -110,6 +110,9 @@ const App = () => {
                 </Route>
                 <Route path="/Routines/create">
                     <CreateRoutine token={token} setRoutines={setRoutines}/>
+                </Route>                
+                <Route path="/Routines/:routineId">
+                    <RoutineItem routines={routines} token={token}/>
                 </Route>
                 <Route path="/Routines">
                     <Routines routines={routines} token={token}/>
