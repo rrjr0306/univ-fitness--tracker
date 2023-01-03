@@ -124,8 +124,9 @@ export const getRoutines = async () => {
 } catch (error){console.error(error, "Something's wrong with getting routines!")}
 } 
 
-export const createRoutine = async (name, goal, isPublic, token) => {    
+export const createRoutine = async (name, goal, isPublic) => {    
     const url = `${BASE_URL}/routines`;
+    const token = localStorage.getItem("token")
     const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -133,9 +134,9 @@ export const createRoutine = async (name, goal, isPublic, token) => {
             'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-            name,
-            goal,
-            isPublic,
+            name: `${name}`,
+            goal: `${goal}`,
+            isPublic: `${isPublic}`,
         })
     });
     const result = await response.json();
@@ -163,3 +164,61 @@ export const getUserRoutines = async() => {
 
     }
 }
+
+export const deleteRoutine = async (event, { token, routine }) => {
+    const { routineId } = routine;
+    const url = `${BASE_URL}/routines/${routineId}`;
+
+    try {
+        const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const result = await response.json();
+        return result
+    } catch (error) {
+        console.error("Error deleting routine", error)
+
+    }
+}
+
+export const updateRoutine = async (routineId, name, goal, isPublic) => {
+    const url = `${BASE_URL}/routines/${routineId}`;
+    const token = localStorage.getItem('token')
+
+    try {
+        const response = await fetch(url, {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                name: `${name}`,
+                goal: `${goal}`,
+                isPublic: `${isPublic}`
+            })
+        })
+        const result = await response.json()
+        return result;
+    } catch (error) {
+        console.error("Error udpating routine", error)
+
+    }   
+}
+
+
+
+
+
+
+
+// be able to update the name and goal for the routine  X
+// be able to delete the entire routine X
+// be able to add an activity to a routine via a small form which has a dropdown for all activities, an inputs for count and duration
+// be able to update the duration or count of any activity on the routine
+// be able to remove any activity from the routine
