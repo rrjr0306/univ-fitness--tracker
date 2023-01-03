@@ -1,51 +1,67 @@
 import React, { useState, useEffect } from "react";
-import { createRoutine, getUserRoutines } from "../api/api"; 
+import { updateRoutine, getUserRoutines } from "../api/api"; 
 
 
-const EditMyRoutines = (props) => {
-    const { newRoutine, setNewRoutine } = useState("");    
-    const [ newGoal, setNewGoal ] = useState("");
-    const [ newIsPublic, setNewIsPublic ] = useState(false)    
-    const [ routine, setRoutine ] = useState([])
 
-    console.log('myroutines..', newRoutine)
+const EditMyRoutines = ({ routine }) => {
+    const token = localStorage.getItem('Token')
+    const [updateIsPublic, setUpdateIsPublic] = useState(false)
+    const [updateName, setUpdateName] = useState("")
+    const [updateGoal, setUpdateGoal] = useState("")
+ 
+    const editFields = { token, routine }
 
-    useEffect(async() => {
-        const gettingRoutines = await getUserRoutines();
-        setRoutine(gettingRoutines)
+    console.log('what is routine?!', routine)
+
+    useEffect(() => {
+    
     }, []);
 
-    const handleOnSubmit = async (event) => {
+
+    const submitUpdate = async (event) => {
         event.preventDefault();
-        const submitRoutine = await createRoutine(newRoutine, newGoal, newIsPublic);
-        setNewRoutine("");
-        setNewGoal("");
-        setNewIsPublic("");
-        setRoutine([submitRoutine, ...routine])
+        const submitRoutine = await updateRoutine(updateName, updateGoal, updateIsPublic);
+        setUpdateName("");
+        setUpdateGoal("");
+        setUpdateIsPublic("");
     }
-    console.log('username??!??!', newRoutine )
+
+    const submitDelete = async (event) => {
+        event.preventDefault();
+        const submitRoutine = await deleteRoutine(editFields);
+
+    }
+
+    console.log('routine again?', routine )
     return(
         <>
             <div>
+                <h1>Edit Routine:</h1>
                 <input
                     placeholder="Routine Name"
-                    value={newRoutine}
-                    onChange={(event) => setNewRoutine(event.target.value)}>
+                    value={updateName}
+                    onChange={(event) => setUpdateName(event.target.value)}>
                 </input>
                 <input
                     placeholder="Goal"
-                    value={newGoal}
-                    onChange={(event) => setNewGoal(event.target.value)}>
+                    value={updateGoal}
+                    onChange={(event) => setUpdateGoal(event.target.value)}>
                 </input>
                 <div><p>isPublic?</p>
                 <input               
                     type="checkbox"                
-                    checked={newIsPublic}                
-                    onChange={(event) => setNewIsPublic(event.target.checked)}
+                    checked={updateIsPublic}                
+                    onChange={(event) => setUpdateIsPublic(event.target.checked)}
                 />
                 </div>
-                <button onClick={handleOnSubmit}>Create New Routine</button>
+                <button onClick={submitUpdate}>Update Routine</button>
             </div>
+            <div>
+                <h1>Delete Routine?</h1>
+                <button onClick={submitDelete}>Delete Routine</button>
+            </div>    
+
+
         </>
         
         )
