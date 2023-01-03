@@ -1,19 +1,19 @@
+import React from "react";
 
-import React, { useState, useEffect } from "react";
-import { getRoutines, getUserRoutines } from "../api/api"
-
-const Routines = () => {
-    const [routine, setRoutine] = useState([])
-    useEffect(async() => {
-      const gettingRoutines = await getUserRoutines();        
-
-        setRoutine(gettingRoutines)   
-    }, []);
-    console.log(routine)
+const MyRoutines = ({routines}) => {
+    
+    // useEffect(async() => {
+    //   const gettingUserRoutines = async () => {      
+    //     const result = await getUserRoutines(token)
+    //     setRoutines(result);
+    //   }
+    //   gettingUserRoutines();
+    // }, [token]);
+    // console.log(routines)
     
   return (
     <div>
-        {routine.map(content =>
+        {routines.map(content =>
             <div key={content.id}>
                <h2>Routine Creator - {content.creatorName}</h2>
                 <p>Name - {content.name}</p>
@@ -33,5 +33,5 @@ const Routines = () => {
   );
 };
 
-export default Routines;
+export default MyRoutines;
 
