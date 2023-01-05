@@ -164,9 +164,10 @@ export const getUserRoutines = async(token, username) => {
     }
 }
 
-export const deleteRoutine = async (event, { token, routine }) => {
-    const { routineId } = routine;
-    const url = `${BASE_URL}/routines/${routineId}`;
+export const deleteRoutine = async (token, routine) => {
+    // const { routineId } = routine;
+    console.log('API ROUTINE', routine)
+    const url = `${BASE_URL}/routines/${routine}`;
 
     try {
         const response = await fetch(url, {

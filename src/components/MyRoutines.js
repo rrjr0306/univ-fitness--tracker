@@ -1,25 +1,36 @@
-import React, { useState } from "react";
-import { deleteRoutine } from "../api/api";
+import React, { useState, useEffect } from "react";
+import { deleteRoutine, getUserRoutines } from "../api/api";
 
 const MyRoutines = ({ token, routines, setRoutines, username }) => {
   console.log('ROUTINES111', routines)
-  
+  const _username = window.localStorage.getItem("username")
+  console.log('USERNAME', username)
   const [userRoutines, setUserRoutines] = useState([]);
 
-  const deleteHandler = async (routineId) => {
-    await deleteRoutine(token, routineId);
-    setRoutines((prevRoutines) => prevRoutines.filter((routine) => routine.id !== routineId))
+  console.log('USERROUTINES!!!', userRoutines)
+  // console.log('ROUTINEID', routineId)
+
+  const deleteHandler = async (routine) => {
+    console.log('DHROUTINE', routine)
+    console.log('tokennn', token)
+    await deleteRoutine(token, routine);
+    // setRoutines((prevRoutines) => prevRoutines.filter((routine) => routine.id !== routineId))
   }
-  
-  
 
+  useEffect(async() => {
+    const gettingUserRoutines = await getUserRoutines(token, _username);
+    setUserRoutines(gettingUserRoutines)
+  }, [])
+      
+  // const { creatorName }  = routines
+  // console.log('CREATORNAME', creatorName)
 
-
-
-    
   return (
     <div>
-        { userRoutines ? userRoutines.map(content =>
+        { userRoutines ? userRoutines.map(content => {
+          const { id } = content
+          const routine = id
+          return (
           <div className="fluid ui card">
             <div className="content">
               <div key={content.id}>
@@ -35,13 +46,13 @@ const MyRoutines = ({ token, routines, setRoutines, username }) => {
                         </div>
                         )}
                 </div>
-                {username.id == creatorId ? (
-                <button onClick={() => {deleteHandler(routine.id)}}>Delete</button>
+                {username == content.creatorName ? (
+                <button onClick={() => {deleteHandler(routine)}}>Delete</button>
                  ) : (null)}
               </div>
             </div>
           </div>
-            ) : <div>
+            )}) : <div>
                   <h3>
                     No User Routines
                   </h3>
