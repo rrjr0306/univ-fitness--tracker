@@ -3,15 +3,14 @@ import { Link } from "react-router-dom";
 
 const Routines = ({routines}) => {
     
-    console.log(routines)
-    
-    
+    console.log('MAINROUTINES', routines)
+  
   return (
         <div>
             <Link to="Routines/create">Create your own Routine!</Link>
             {routines.map(content => 
                 <div key={content.id}>
-                    <h2>Routine Creator - {content.creatorName}</h2>
+                    <h2><a href={`/routines/users/${content.creatorName}`} params={{username: content.creatorName}}>Routine Creator - {content.creatorName}</a></h2>
                     <p>Name - {content.name}</p>
                     <p>Goal - {content.goal}</p>
                     <div>
@@ -27,7 +26,8 @@ const Routines = ({routines}) => {
                 )}
         </div>
   );
-};
+}
+
 
 export default Routines;
 

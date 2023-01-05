@@ -164,6 +164,25 @@ export const getUserRoutines = async(token, username) => {
     }
 }
 
+export const getSpecificUserRoutines = async(token, username) => {
+    const url = `${BASE_URL}/users/${username}/routines`
+
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }       
+        });
+        const result = await response.json();
+        return result
+    } catch (error) {
+        console.error("Error getting user's routines")
+
+    }
+}
+
 export const deleteRoutine = async (token, routine) => {
     // const { routineId } = routine;
     console.log('API ROUTINE', routine)
