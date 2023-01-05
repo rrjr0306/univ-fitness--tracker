@@ -47,7 +47,7 @@ export const fetchLogin = async (username, password) => {
             }),
         });
 
-        const data = response.json();
+        const data = await response.json();
         console.log("DATA", data)
         return data
     } catch(error) {
@@ -65,7 +65,8 @@ export const fetchGuest = async (token) => {
             }
         });
 
-        const data = response.json()
+        const data = await response.json()
+        console.log("DAAAAATTTTAAAAA", data)
         return data;
     } catch(error) {
         console.error('Failed to fetch guest!', error);
