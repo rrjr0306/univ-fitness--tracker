@@ -1,22 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { getUserRoutines, deleteRoutine } from "../api/api";
+import React, { useState } from "react";
+import { deleteRoutine } from "../api/api";
 
-const MyRoutines = ({ token, routines }) => {
+const MyRoutines = ({ token, routines, setRoutines, username }) => {
   console.log('ROUTINES111', routines)
-  const username = window.localStorage.getItem("username")
   
   const [userRoutines, setUserRoutines] = useState([]);
 
-  const deleteHandler = async (event) => {
-    event.preventDefault();
-    const deletedRoutine = await deleteRoutine(token, routine)
-    return deletedRoutine
+  const deleteHandler = async (routineId) => {
+    await deleteRoutine(token, routineId);
+    setRoutines((prevRoutines) => prevRoutines.filter((routine) => routine.id !== routineId))
   }
   
-  useEffect(async() => {
-    const gettingUserRoutines = await getUserRoutines(token, username);
-    setUserRoutines(gettingUserRoutines)
-  }, [])
+  
 
 
 
@@ -40,9 +35,9 @@ const MyRoutines = ({ token, routines }) => {
                         </div>
                         )}
                 </div>
-                <div onSubmit={(event) => deleteHandler(e, {token, routine})}>
-                <button type='submit'>Delete</button>
-                </div>      
+                {username.id == creatorId ? (
+                <button onClick={() => {deleteHandler(routine.id)}}>Delete</button>
+                 ) : (null)}
               </div>
             </div>
           </div>

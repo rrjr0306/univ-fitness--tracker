@@ -120,7 +120,7 @@ const App = () => {
                     <EditMyRoutines token={token} />
                 </Route>
                 <Route path="/MyRoutines">
-                    <MyRoutines username={username} routines={routines} token={token}/>
+                    <MyRoutines username={username} routines={routines} setRoutines={setRoutines} token={token}/>
                 </Route>
                 <Route path="/AccountForm/:action">
                     <AccountForm setToken={setToken}/>
