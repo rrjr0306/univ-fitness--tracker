@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { deleteRoutine, getUserRoutines } from "../api/api";
+import { Link, useHistory } from "react-router-dom";
+import EditMyRoutines from "./EditMyRoutines";
 
 const MyRoutines = ({ token, routines, setRoutines, username }) => {
   console.log('ROUTINES111', routines)
   const _username = window.localStorage.getItem("username")
   console.log('USERNAME', username)
   const [userRoutines, setUserRoutines] = useState([]);
+  const history = useHistory();
 
   console.log('USERROUTINES!!!', userRoutines)
   // console.log('ROUTINEID', routineId)
@@ -47,7 +50,13 @@ const MyRoutines = ({ token, routines, setRoutines, username }) => {
                         )}
                 </div>
                 {username == content.creatorName ? (
-                <button onClick={() => {deleteHandler(routine)}}>Delete</button>
+                <>
+                <button onClick={() => {deleteHandler(routine)}}>Delete?</button>
+                <div>
+                Edit This Routine?
+                <EditMyRoutines routines={content}/>
+                </div> 
+                </>
                  ) : (null)}
               </div>
             </div>
