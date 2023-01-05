@@ -49,7 +49,7 @@ const MyRoutines = ({ token, routines, setRoutines, username }) => {
                         </div>
                         )}
                 </div>
-                {username == content.creatorName ? (
+                {_username == content.creatorName ? (
                 <>
                 <button onClick={() => {deleteHandler(routine)}}>Delete?</button>
                 <div>
