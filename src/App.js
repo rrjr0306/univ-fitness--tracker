@@ -117,7 +117,7 @@ const App = () => {
                     <Routines routines={routines} token={token}/>
                 </Route>
                 <Route path="MyRoutines/edit">
-                    <EditMyRoutines token={token} />
+                    <EditMyRoutines token={token} routines={routines} />
                 </Route>
                 <Route path="/MyRoutines">
                     <MyRoutines username={username} routines={routines} setRoutines={setRoutines} token={token}/>

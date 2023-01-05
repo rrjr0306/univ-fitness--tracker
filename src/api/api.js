@@ -186,7 +186,7 @@ export const deleteRoutine = async (token, routine) => {
     }
 }
 
-export const updateRoutine = async (routineId, name, goal, isPublic) => {
+export const updateRoutine = async (routineId, name, goal, isPublic ) => {
     const url = `${BASE_URL}/routines/${routineId}`;
     const token = localStorage.getItem('token')
 
