@@ -13,7 +13,7 @@ const MyRoutines = ({ token, routines, setRoutines, username }) => {
   console.log('USERROUTINES!!!', userRoutines)
   // console.log('ROUTINEID', routineId)
 
-  const deleteHandler = async (routine) => {
+  const routineDeleteHandler = async (routine) => {
     console.log('DHROUTINE', routine)
     console.log('tokennn', token)
     await deleteRoutine(token, routine);
@@ -27,6 +27,10 @@ const MyRoutines = ({ token, routines, setRoutines, username }) => {
       
   // const { creatorName }  = routines
   // console.log('CREATORNAME', creatorName)
+
+  const activityDeleteHandler = async (activityId) => {
+    await deleteActivity(token, activityId)
+}
 
   return (
     <div>
@@ -46,12 +50,13 @@ const MyRoutines = ({ token, routines, setRoutines, username }) => {
                             <h3 className="center aligned ui sub header">Activity name - {activity.name}</h3>
                             <p className="ui small feed">Activity discription - {activity.description}</p>
                             <p className="ui small feed">Duration and Count - {activity.duration} , {activity.count}</p>
+                            <button onClick={() => {activityDeleteHandler(activityId)}}>Delete?</button>
                         </div>
                         )}
                 </div>
                 {_username == content.creatorName ? (
                 <>
-                <button onClick={() => {deleteHandler(routine)}}>Delete?</button>
+                <button onClick={() => {routineDeleteHandler(routine)}}>Delete?</button>
                 <div>
                 Edit This Routine?
                 <EditMyRoutines routines={content}/>
