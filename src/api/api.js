@@ -90,6 +90,25 @@ export const fetchActivities = async () => {
     }
 }
 
+export const deleteActivity = async (token, routineActivityId) => {
+    // const token = localStorage.getItem("token")
+    console.log('api delete activity', routineActivityId )
+    try {
+        const response = await fetch(`${BASE_URL}/routine_activities/${routineActivityId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        
+        const data = await response.json()
+        return data;
+    } catch(error) {
+        console.error("There was an error deleting activities", error)
+    }
+}
+
 export const createActivities = async (name, description) => {
     try {
         const response = await fetch(`${BASE_URL}/activities`, {

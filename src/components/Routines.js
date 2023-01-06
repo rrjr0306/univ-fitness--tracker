@@ -1,9 +1,14 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
+import { deleteActivity } from "../api/api";
 
-const Routines = ({routines}) => {
-    
+const Routines = ({routines, token}) => {
+
     console.log('MAINROUTINES', routines)
+
+    const activityDeleteHandler = async (token, routineActivityId) => {
+        await deleteActivity(token, routineActivityId)
+    }  
   
   return (
         <div>
@@ -19,6 +24,7 @@ const Routines = ({routines}) => {
                                 <h3>Activity name - {activity.name}</h3>
                                 <p>Activity discription - {activity.description}</p>
                                 <p>Duration and Count - {activity.duration} , {activity.count}</p>
+                                {token ? <button onClick={() => {activityDeleteHandler(activity.routineActivityId)}}>Delete?</button> : null}
                             </div>
                             )}
                     </div>                 

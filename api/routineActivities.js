@@ -46,6 +46,8 @@ router.delete('/:routineActivityId', requireUser, async (req, res, next) => {
     const {routineId} = routineActivity
     const routine = await getRoutineById(routineId)
 
+    console.log('ROUTINESS IN API-RA',routineActivity )
+
     try {
         if (routineActivity && routine.creatorId === id) {
             const deletedActivity = await destroyRoutineActivity(routineActivityId)
