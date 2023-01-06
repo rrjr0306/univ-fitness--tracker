@@ -6,7 +6,8 @@ const Routines = ({routines, token}) => {
 
     console.log('MAINROUTINES', routines)
 
-    const activityDeleteHandler = async (token, routineActivityId) => {
+    const activityDeleteHandler = async (routineActivityId) => {
+        // console.log('can you see me??!!', routineActivityId)
         await deleteActivity(token, routineActivityId)
     }  
   
