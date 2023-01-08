@@ -27,12 +27,14 @@ async function createUser({ username, password }) {
     }
   }
 
-async function getUser({ username, password}) {
+async function getUser({username, password}) {
   try {
 const user = await getUserByUsername(username);
+console.log("USSSER", user)
 const hashedPassword = user.password;
 
 const isValid = await bcrypt.compare(password, hashedPassword);
+
 
 delete user.password;
 

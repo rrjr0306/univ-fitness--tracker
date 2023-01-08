@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import { deleteActivity } from "../api/api";
 
-const ActivityItem = ({activities, token, setActivities}) => {
+const ActivityItem = ({activities}) => {
 
 
 
