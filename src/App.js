@@ -31,10 +31,9 @@ const App = () => {
     useEffect(() => {
         if (token) {
             const getGuest = async () => {
-                const {username} = await fetchGuest(token);
-                console.log("RESULT", username)
-                setUsername(username)
-                window.localStorage.setItem("username", username)
+                const {user} = await fetchGuest(token);
+                console.log("RESULT", user)
+                setUsername(user)
             };
             getGuest();
         }

@@ -12,22 +12,16 @@ export const fetchRegister = async (username, password) => {
                 user: {
                     username,
                     password
-                },
+                }
             }),
         });
 
         const data = await response.json();
-        console.log("DATATA", response)
+        console.log("LOOKING FOR IDDDDD", data)
         return data;
 
     } catch(error) {
         console.error("Error registering new user", error)
-
-        return {
-            error: "Error registration failed",
-            token: null,
-            message: null
-        }
     }
 };
 
@@ -43,12 +37,12 @@ export const fetchLogin = async (username, password) => {
                 user: {
                     username,
                     password
-                },
+                }
             }),
         });
 
         const data = await response.json();
-        console.log("DATA", data)
+        console.log("LOOKING FOR ID", data)
         return data
     } catch(error) {
         console.error("There was an error logging in", error);
@@ -202,10 +196,10 @@ export const getSpecificUserRoutines = async(token, username) => {
     }
 }
 
-export const deleteRoutine = async (token, routine) => {
+export const deleteRoutine = async (token, routineId) => {
     // const { routineId } = routine;
     console.log('API ROUTINE', routine)
-    const url = `${BASE_URL}/routines/${routine}`;
+    const url = `${BASE_URL}/routine/${routineId}`;
 
     try {
         const response = await fetch(url, {
@@ -250,7 +244,22 @@ export const updateRoutine = async (routineId, name, goal, isPublic ) => {
 }
 
 
+export const deleteRoutineActivity = async (token, routineActivityId) => {
+    try {
+        const response = await fetch(`${BASE_URL}/routine_activities/${routineActivityId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
 
+        const result = await response.json();
+        return result;
+    } catch(error) {
+        console.error("There was an error deleting routine-activitiy", error)
+    }
+}
 
 
 

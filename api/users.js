@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const {JWT_SECRET="neverTell"} = process.env
-const { createUser, getUserByUsername, getAllRoutinesByUser, getPublicRoutinesByUser} = require('../db');
+const { createUser, getUserByUsername, getAllRoutinesByUser, getPublicRoutinesByUser, getUser} = require('../db');
 const { requireUser } = require("./utils")
 
 // router.use((req, res, next) => {
@@ -15,9 +15,9 @@ const { requireUser } = require("./utils")
 
 router.post('/login', async (req, res, next) => {
     const { username, password } = req.body.user;
-    console.log("UM", username, password)
+    console.log("USE/PASS", username, password)
     if (!username || !password) {
-        next({
+        res.status(400).send({
             error: 'IncorrectCredentialsError',
             name: 'IncorrectCredentialsError',
             message: "Sorry, your username or password is incorrect"
@@ -26,14 +26,13 @@ router.post('/login', async (req, res, next) => {
 
     try {
         const user = await getUserByUsername(username);
-
-        const token = jwt.sign({id: user.id, username: user.username}, JWT_SECRET, {expiresIn: '1y'})
+        console.log("USERNAME USER", user)
 
         if (user) {
-
-            res.send({ user, message: "you're logged in!", token});
+            const token = jwt.sign({id: user.id, username: user.username}, JWT_SECRET, {expiresIn: '1y'})
+            res.send({user: user, message: "you're logged in!", token});
         } else {
-            next({
+            res.status(401).send({
                 name: 'IncorrectCredentialsError',
                 message: ' Sorry, your username or password is incorrect'
             });
@@ -48,10 +47,10 @@ router.post('/login', async (req, res, next) => {
 router.post('/register', async (req, res, next) => {
     const { username, password } = req.body.user;
 
-    console.log("UNMMMM", username, password)
+    console.log("UNMMMM", req.body.user)
     try {
         const _user = await getUserByUsername(username);
-
+        console.log("___________", _user)
         
         if (_user) {
             next({
@@ -92,8 +91,8 @@ router.post('/register', async (req, res, next) => {
 
 // GET /api/users/me
 router.get('/me', requireUser, async (req, res, next) => {
-    const {user} = req;
-    
+        const user = req.user
+        console.log("REQBODYUSER", req.body)
     try{
         res.send(user)
     } catch (error) {
@@ -104,9 +103,9 @@ router.get('/me', requireUser, async (req, res, next) => {
 // GET /api/users/:username/routines
 router.get('/:username/routines', requireUser, async (req, res, next) => {
 const { username } = req.params;
-console.log("UN", username)
+
 const user = await getUserByUsername(username);
-console.log("USER", user)
+
 const publicRoutine = await getPublicRoutinesByUser({username: username});
 const allRoutines = await getAllRoutinesByUser({username: username});
 try { 
