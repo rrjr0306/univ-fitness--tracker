@@ -1,35 +1,30 @@
-import React, { useState, useEffect } from "react";
-import { createRoutine, getUserRoutines } from "../api/api"; 
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { createRoutine } from "../api/api"; 
 
-const CreateRoutine = () => {
-    const { newRoutine, setNewRoutine } = useState("");    
+const CreateRoutine = ({token, setRoutines}) => {
+    const [newRoutineName, setNewRoutineName] = useState("");    
     const [ newGoal, setNewGoal ] = useState("");
     const [ newIsPublic, setNewIsPublic ] = useState(false)    
-    const [ routine, setRoutine ] = useState([])
-
-    console.log('myroutines..', newRoutine)
-
-    useEffect(async() => {
-        const gettingRoutines = await getUserRoutines();
-        setRoutine(gettingRoutines)
-    }, []);
-
-    const handleOnSubmit = async (event) => {
-        event.preventDefault();
-        const submitRoutine = await createRoutine(newRoutine, newGoal, newIsPublic);
-        setNewRoutine("");
-        setNewGoal("");
-        setNewIsPublic("");
-        setRoutine([submitRoutine, ...routine])
-    }
-    console.log('username??!??!', newRoutine )
-    return (
+    const history = useHistory();
+    
+    return (<>
         <div>
-            <form onSubmit={handleOnSubmit}>
+            <form onSubmit={async (event) => {
+                event.preventDefault();
+                
+                const routine = await createRoutine(token, newRoutineName, newGoal, newIsPublic);
+                console.log('THIS BETTER WORK', routine);
+                setRoutines((prevRoutines) => [...prevRoutines, routine]);
+                setNewRoutineName("");
+                setNewGoal("");
+                setNewIsPublic(false);
+                history.push("/Routines")
+            }}>
                 <input
                     placeholder="Routine Name"
-                    value={newRoutine}
-                    onChange={(event) => setNewRoutine(event.target.value)}>
+                    value={newRoutineName}
+                    onChange={(event) => setNewRoutineName(event.target.value)}>
                 </input>
                 <input
                     placeholder="Goal"
@@ -47,7 +42,7 @@ const CreateRoutine = () => {
             </form>
         </div>
         
-        )
+        </>)
     }
 
 
