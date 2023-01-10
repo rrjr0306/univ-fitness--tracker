@@ -69,7 +69,7 @@ async function updateRoutineActivity ({id, ...fields}) {
     `,
       Object.values(fields)
     )
-    console.log('ROUTINEACTIVITY!!', routineActivity)
+
     return routineActivity;
 
   } catch (error) {
@@ -97,8 +97,6 @@ async function destroyRoutineActivity(id) {
 }
 
 async function canEditRoutineActivity(routineActivityId, userId) {
-  console.log("R A I", routineActivityId)
-  console.log("U I", userId)
   
   try {
     const {rows: [routineActivity]} = await client.query(`

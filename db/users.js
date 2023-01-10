@@ -20,7 +20,6 @@ async function createUser({ username, password }) {
 
       delete user.password;
 
-      // console.log("USER", user)
       return user;
     } catch (error) {
       throw error;
@@ -29,22 +28,23 @@ async function createUser({ username, password }) {
 
 async function getUser({username, password}) {
   try {
-const user = await getUserByUsername(username);
-console.log("USSSER", user)
-const hashedPassword = user.password;
 
-const isValid = await bcrypt.compare(password, hashedPassword);
+    const user = await getUserByUsername(username);
+
+    const hashedPassword = user.password;
+
+    const isValid = await bcrypt.compare(password, hashedPassword);
 
 
-delete user.password;
+    delete user.password;
 
-if (isValid) {
+    if (isValid) {
 
-  delete user.password
-  return user;
-} else {
-  return null;
-}
+      delete user.password
+      return user;
+    } else {
+      return null;
+    }
   } catch (error) {
     throw error;
   }

@@ -1,38 +1,36 @@
-import React from 'react';
+// import React from 'react';
 
-import ActivityItem from "./ActivityItem";
+// import ActivityItem from "./ActivityItem";
 
-const RoutineItem = ({ children, routines }) => {
-    console.log('each routine goes here', routines)
-    return ( 
-         <div>
-            <span><h3>{routine.name}</h3></span>
-            <span><h3>created by {routine.creatorName}</h3></span>
-            <span>Goal: {routine.goal}</span>
-            <span>Public: {routine.isPublic ? 'yes': 'no' }</span>
+// const RoutineItem = ({ routines }) => {
+//     console.log('each routine goes here', routines)
+//     return ( 
+//          <div>
+//             <span><h3>{routines.name}</h3></span>
+//             <span><h3>created by {routines.creatorName}</h3></span>
+//             <span>Goal: {routines.goal}</span>
+//             <span>Public: {routines.isPublic ? 'yes': 'no' }</span>
 
-            { children }
+//             {<div>
+//                 <span>Activities:</span>
+//                 <ul>
+//                 {
+//                  routines.activities.map(activity => <li key={activity.id}>
+//                      <ActivityItem activities={activity}>
+//                      {
+//                         <>
+//                             <span>Count: {activity.count}</span>
+//                             <span>Duration: {activity.duration}</span>
+//                         </>
+//                      }
+//                     </ActivityItem>
+//                 </li>)
+//                 }
+//                 </ul>
+//             </div>
+//             }
+//         </div>
+//     )
+// };
 
-            {<div>
-                <span>Activities:</span>
-                <ul>
-                {
-                 routine.activities.map(activity => <li key={activity.id}>
-                     <ActivityItem activities={activity}>
-                     {
-                        <>
-                            <span>Count: {activity.count}</span>
-                            <span>Duration: {activity.duration}</span>
-                        </>
-                     }
-                    </ActivityItem>
-                </li>)
-                }
-                </ul>
-            </div>
-            }
-        </div>
-    )
-};
-
-export default RoutineItem;
+// export default RoutineItem;

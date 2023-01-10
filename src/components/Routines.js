@@ -1,36 +1,39 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { deleteActivity } from "../api/api";
+import { deleteRoutineActivity } from "../api/api";
 
-const Routines = ({routines, token}) => {
-
-    console.log('MAINROUTINES', routines)
-
+const Routines = ({routines, token, setActivities}) => {
+    if (!routines) {
+        return (<h1>Loading</h1>)
+      }
+    // console.log('MAINROUTINES', routines)
+    
     const activityDeleteHandler = async (routineActivityId) => {
         // console.log('can you see me??!!', routineActivityId)
-        await deleteActivity(token, routineActivityId)
+        await deleteRoutineActivity(token, routineActivityId)
+        setActivities((prevActivities) => prevActivities.filter((activity) => activity.routineActivityId !== routineActivityId))
     }  
-  
-  return (
+
+    return (
         <div>
             <Link to="Routines/create">Create your own Routine!</Link>
-            {routines.map(content => 
-                <div key={content.id}>
-                    <h2><a href={`/routines/users/${content.creatorName}`} params={{username: content.creatorName}}>Routine Creator - {content.creatorName}</a></h2>
-                    <p>Name - {content.name}</p>
-                    <p>Goal - {content.goal}</p>
+            {Array.isArray(routines) && routines.map((routine) => 
+                <div key={routine.id}>
+                    <h2><a href={`/routines/users/${routine.creatorName}`} params={{username: routine.creatorName}}>Routine Creator - {routine.creatorName}</a></h2>
+                    <p>Name - {routine.name}</p>
+                    <p>Goal - {routine.goal}</p>
                     <div>
-                        {content.activities.map(activity =>
+                        {routine.activities && routine.activities.map(activity =>
                             <div key={activity.id}>
                                 <h3>Activity name - {activity.name}</h3>
                                 <p>Activity discription - {activity.description}</p>
                                 <p>Duration and Count - {activity.duration} , {activity.count}</p>
-                                {token ? <button onClick={() => {activityDeleteHandler(activity.routineActivityId)}}>Delete?</button> : null}
+                                {token ? <button onClick={() => activityDeleteHandler(activity.routineActivityId)}>Delete?</button> : null}
                             </div>
-                            )}
+                        )}
                     </div>                 
                 </div>
-                )}
+            )}
         </div>
   );
 }

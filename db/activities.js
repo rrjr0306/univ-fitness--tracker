@@ -52,21 +52,19 @@ async function attachActivitiesToRoutines(routines) {
       JOIN routine_activities ON activities.id = routine_activities."activityId"
       WHERE routine_activities."routineId" IN (${moneySigns});
     `, routineId);
-    // console.log("ACTIVITYROUTINE", activityRoutine)
+
     for (const routine of routinesCopy) {
       
       const addedActivity = activityRoutine.filter((activity) => {
         return activity.routineId === routine.id;
 
       })
-      // console.log("AA", addedActivity)
+
       routine.activities = addedActivity;
-      // console.log("ROUTINE", routine);
 
     }
-    // console.log("ROUTINECOPY", routinesCopy)
-    return routinesCopy;
 
+    return routinesCopy;
     
   } catch(error) {
     throw error;

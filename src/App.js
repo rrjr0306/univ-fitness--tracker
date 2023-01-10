@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Home, Routines, MyRoutines, ActivityItem, AccountForm, Activities, CreateActivity, CreateRoutine, RoutineItem, EditMyRoutines, deleteActivity, UsersRoutines} from "./components";
+import {Home, Routines, MyRoutines, ActivityItem, AccountForm, Activities, CreateActivity, CreateRoutine, EditMyRoutines, UsersRoutines} from "./components";
 import {Link, Route, Switch, useHistory} from "react-router-dom";
 import {fetchGuest, fetchActivities, getRoutines} from "./api/api"
 
@@ -31,20 +31,24 @@ const App = () => {
     useEffect(() => {
         if (token) {
             const getGuest = async () => {
-                const {user} = await fetchGuest(token);
-                console.log("RESULT", user)
-                setUsername(user)
+                const {username} = await fetchGuest(token);
+                setUsername(username)
             };
             getGuest();
         }
     }, [token])
 
     useEffect(() => {
-        const gettingRoutines = async () => { 
-            const result = await getRoutines();     
-            setRoutines(result);
-        }
-        gettingRoutines();   
+        try {
+            const gettingRoutines = async () => { 
+                const routines = await getRoutines(); 
+                console.log("ROUTINESSSSS", routines)    
+                setRoutines(routines);
+            }
+            gettingRoutines();
+        } catch(error) {
+            console.error("Error fetching routines", error)
+        }   
       }, []);
 
     useEffect(() => {
@@ -115,12 +119,12 @@ const App = () => {
                 <Route path="/Routines/users/:username">
                     <UsersRoutines routines={routines} username={username} token={token}/>
                 </Route>                
-                <Route path="/Routines/:routineId">
+                {/* <Route path="/Routines/:routineId">
                     <RoutineItem routines={routines} token={token}/>
-                </Route>
+                </Route> */}
  
                 <Route path="/Routines">
-                    <Routines routines={routines} token={token}/>
+                    <Routines routines={routines} token={token} setActivities={setActivities}/>
                 </Route>
                 <Route path="MyRoutines/edit">
                     <EditMyRoutines token={token} routines={routines} />

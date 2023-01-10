@@ -81,9 +81,9 @@ router.post('/', async (req, res, next) => {
 })
 // PATCH /api/activities/:activityId
 router.patch('/:activityId', async (req, res, next) => {
+    
     const {name, description} = req.body;
     const {activityId} = req.params;
-    console.log("AID", activityId)
 
     try {
 
