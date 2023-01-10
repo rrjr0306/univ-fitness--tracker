@@ -12,7 +12,7 @@ router.patch('/:routineActivityId', requireUser, async (req, res, next) => {
     const routineToBeUpdated = await getRoutineActivityById(routineActivityId);
     const {routineId} = routineToBeUpdated
     const routine = await getRoutineById(routineId)
-    console.log('ROUTINE', routine) 
+
     try {
 
         if (routineToBeUpdated && id === routine.creatorId) {
@@ -45,8 +45,6 @@ router.delete('/:routineActivityId', requireUser, async (req, res, next) => {
     
     const {routineId} = routineActivity
     const routine = await getRoutineById(routineId)
-
-    console.log('ROUTINESS IN API-RA',routineActivity )
 
     try {
         if (routineActivity && routine.creatorId === id) {

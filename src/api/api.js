@@ -17,7 +17,7 @@ export const fetchRegister = async (username, password) => {
         });
 
         const data = await response.json();
-        console.log("LOOKING FOR IDDDDD", data)
+
         return data;
 
     } catch(error) {
@@ -42,7 +42,7 @@ export const fetchLogin = async (username, password) => {
         });
 
         const data = await response.json();
-        console.log("LOOKING FOR ID", data)
+
         return data
     } catch(error) {
         console.error("There was an error logging in", error);
@@ -60,7 +60,7 @@ export const fetchGuest = async (token) => {
         });
 
         const data = await response.json()
-        console.log("DAAAAATTTTAAAAA", data)
+
         return data;
     } catch(error) {
         console.error('Failed to fetch guest!', error);
@@ -77,7 +77,7 @@ export const fetchActivities = async () => {
         })
         
         const data = await response.json()
-        console.log("DATA", data)
+
         return data;
     } catch(error) {
         console.error("There was an error fetching activities", error)
@@ -85,7 +85,7 @@ export const fetchActivities = async () => {
 }
 
 export const deleteActivity = async (token, routineActivityId) => {
-    // const token = localStorage.getItem("token")
+
     console.log('api delete activity', routineActivityId )
     try {
         const response = await fetch(`${BASE_URL}/routine_activities/${routineActivityId}`, {
@@ -117,7 +117,7 @@ export const createActivities = async (name, description) => {
         })
 
         const data = await response.json();
-        console.log("THIS IS ", data)
+
         return data;
     } catch(error) {
         console.error("There was an error creating posts", error)
@@ -138,23 +138,27 @@ export const getRoutines = async () => {
 } catch (error){console.error(error, "Something's wrong with getting routines!")}
 } 
 
-export const createRoutine = async (name, goal, isPublic) => {    
-    const url = `${BASE_URL}/routines`;
-    const token = localStorage.getItem("token")
-    const response = await fetch(url, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-            name: `${name}`,
-            goal: `${goal}`,
-            isPublic: `${isPublic}`,
-        })
-    });
-    const result = await response.json();
-    return result;
+export const createRoutine = async (token, name, goal, isPublic) => {    
+    try {
+        const response = await fetch(`${BASE_URL}/routines`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                name,
+                goal,
+                isPublic
+            })
+        });
+
+        const result = await response.json();
+        console.log("UMMUMM", result)
+        return result;
+    } catch(error) {
+        console.error("There was an error creating routine", error)
+    }
 };
 
 export const getUserRoutines = async(token, username) => {
@@ -168,8 +172,9 @@ export const getUserRoutines = async(token, username) => {
                 'Authorization': `Bearer ${token}`
             }       
         });
-        console.log('hellloooooooo')
+
         const result = await response.json();
+        console.log("ARESULT", result)
         return result
     } catch (error) {
         console.error("Error getting user's routines")
@@ -197,8 +202,7 @@ export const getSpecificUserRoutines = async(token, username) => {
 }
 
 export const deleteRoutine = async (token, routineId) => {
-    // const { routineId } = routine;
-    console.log('API ROUTINE', routine)
+
     const url = `${BASE_URL}/routine/${routineId}`;
 
     try {
@@ -255,6 +259,7 @@ export const deleteRoutineActivity = async (token, routineActivityId) => {
         });
 
         const result = await response.json();
+        console.log("HOME STRETCH", result)
         return result;
     } catch(error) {
         console.error("There was an error deleting routine-activitiy", error)

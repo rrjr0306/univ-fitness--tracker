@@ -5,18 +5,14 @@ const {JWT_SECRET="neverTell"} = process.env
 const { createUser, getUserByUsername, getAllRoutinesByUser, getPublicRoutinesByUser, getUser} = require('../db');
 const { requireUser } = require("./utils")
 
-// router.use((req, res, next) => {
-//     console.log("request being made to /users");
-    
-//     next();
-// });
-
 // POST /api/users/login
 
 router.post('/login', async (req, res, next) => {
+
     const { username, password } = req.body.user;
-    console.log("USE/PASS", username, password)
+
     if (!username || !password) {
+
         res.status(400).send({
             error: 'IncorrectCredentialsError',
             name: 'IncorrectCredentialsError',
@@ -25,8 +21,8 @@ router.post('/login', async (req, res, next) => {
     }
 
     try {
+        
         const user = await getUserByUsername(username);
-        console.log("USERNAME USER", user)
 
         if (user) {
             const token = jwt.sign({id: user.id, username: user.username}, JWT_SECRET, {expiresIn: '1y'})
@@ -45,12 +41,11 @@ router.post('/login', async (req, res, next) => {
 
 // POST /api/users/register
 router.post('/register', async (req, res, next) => {
+    
     const { username, password } = req.body.user;
 
-    console.log("UNMMMM", req.body.user)
     try {
         const _user = await getUserByUsername(username);
-        console.log("___________", _user)
         
         if (_user) {
             next({
@@ -91,8 +86,9 @@ router.post('/register', async (req, res, next) => {
 
 // GET /api/users/me
 router.get('/me', requireUser, async (req, res, next) => {
-        const user = req.user
-        console.log("REQBODYUSER", req.body)
+        
+    const user = req.user
+    
     try{
         res.send(user)
     } catch (error) {
@@ -102,12 +98,17 @@ router.get('/me', requireUser, async (req, res, next) => {
 
 // GET /api/users/:username/routines
 router.get('/:username/routines', requireUser, async (req, res, next) => {
-const { username } = req.params;
 
-const user = await getUserByUsername(username);
+const {username} = req.params;
+console.log("routineUser", username)
+
+const user = await getUserByUsername(username)
+console.log("WHAT?", user)
 
 const publicRoutine = await getPublicRoutinesByUser({username: username});
+console.log("PUBROUTINE", publicRoutine)
 const allRoutines = await getAllRoutinesByUser({username: username});
+console.log("AROUTINEs", allRoutines)
 try { 
     if (!username) {
         next({

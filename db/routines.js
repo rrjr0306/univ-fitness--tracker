@@ -2,9 +2,6 @@
 const { attachActivitiesToRoutines } = require('./activities');
 const client = require('./client');
 
-//hi, just testing.
-
-
 async function getRoutineById(id){
   // eslint-disable-next-line no-useless-catch
   try {
@@ -31,8 +28,6 @@ async function getRoutinesWithoutActivities(){
       FROM routines;
     `);
 
-    // console.log("ROUTINES", routines)
-
     return routines
   } catch (error) {
     throw error
@@ -47,22 +42,8 @@ async function getAllRoutines() {
         JOIN users ON users.id = routines."creatorId";
     `);
 
-    // for( let routine of routines ) {
-    //   const { rows: [activities] } = await client.query(`
-    //     SELECT *
-    //     FROM activities
-    //     JOIN routine_activities ON routine_activities."activityId" = activities.id
-    //     WHERE routine_activities."routineId" = $1
-    //   `, [ routine.id ]);
-    //   // console.log("RI", activities)
-    //   routine.activities = activities;
-    
-    // }
-    // console.log("R-----", routines)
-    // console.log("HERE")
     const result = await attachActivitiesToRoutines(routines);
 
-    // console.log("RESULT", result)
     return result
     
   } catch (error) {
@@ -79,20 +60,8 @@ async function getAllRoutinesByUser({username}) {
         WHERE users.username=$1;
     `, [ username ]);
 
-    // for( const routine of routines ) {
-    //   const { rows: activities } = await client.query(`
-    //     SELECT *
-    //     FROM activities
-    //     JOIN routine_activities ON routine_activities."activityId" = activities.id
-    //     WHERE routine_activities."routineId" = $1
-    //   `, [ routine.id ]);
-
-    //   routine.activities = activities;
-    // }
-
     return await attachActivitiesToRoutines(routines)
 
-    // return routines;
   } catch (error) {
     throw error
   }
@@ -108,16 +77,6 @@ async function getPublicRoutinesByUser({username}) {
         AND users.username=$1;
     `, [ username ]);
 
-    // for( const routine of routines ) {
-    //   const { rows: activities } = await client.query(`
-    //     SELECT *
-    //     FROM activities
-    //     JOIN routine_activities ON routine_activities."activityId" = activities.id
-    //     WHERE routine_activities."routineId" = $1
-    //   `, [ routine.id ]);
-
-    //   routine.activities = activities;
-    // }
     const result = attachActivitiesToRoutines(routines)
     return result;
   } catch (error) {
@@ -134,16 +93,6 @@ async function getAllPublicRoutines() {
         WHERE "isPublic"=true;
     `);
 
-    // for( const routine of routines ) {
-    //   const { rows: activities } = await client.query(`
-    //     SELECT *
-    //     FROM activities
-    //     JOIN routine_activities ON routine_activities."activityId" = activities.id
-    //     WHERE routine_activities."routineId" = $1
-    //   `, [ routine.id ]);
-
-    //   routine.activities = activities;
-    // }
     const result = attachActivitiesToRoutines(routines)
     return result;
   } catch (error) {
@@ -162,17 +111,6 @@ async function getPublicRoutinesByActivity({id}) {
         WHERE routines."isPublic"=true
         AND routine_activities."activityId"=${id};
     `);
-
-    // for( const routine of routines ) {
-    //   const { rows: activities } = await client.query(`
-    //     SELECT *
-    //     FROM activities
-    //     JOIN routine_activities ON routine_activities."activityId" = activities.id
-    //     WHERE routine_activities."routineId" = $1;
-    //   `, [ routine.id ]);
-      
-    //   routine.activities = activities;
-    // }
 
     const result = attachActivitiesToRoutines(routines)
 

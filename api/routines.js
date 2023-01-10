@@ -9,6 +9,7 @@ const { requireUser } = require('./utils');
 router.get('/', async (req, res, next) => {
     try {
         const allRoutines = await getAllPublicRoutines();
+        console.log("ALLROUTIENS", allRoutines)
         res.send(allRoutines);
     } catch ({ name, message }) {
         next ({ name, message }); 
@@ -23,13 +24,13 @@ router.post('/', requireUser, async (req, res, next) => {
     const { isPublic, name, goal } = req.body;
     const {id} = req.user;
     
-    console.log("ID", req.user.id)
+    console.log("ID", id)
     try {
         const routine = await createRoutine({ 
             creatorId: id,
-            isPublic: isPublic,
             name: name,
-            goal: goal 
+            goal: goal,
+            isPublic: isPublic
         });
         console.log('ROUTINE', routine)
         res.send(routine)

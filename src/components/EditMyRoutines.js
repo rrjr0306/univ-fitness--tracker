@@ -83,15 +83,14 @@
 
 
 import React, { useEffect, useState } from 'react';
-import { createRoutine, updateRoutine } from "../api/api"; 
+import { updateRoutine } from "../api/api"; 
 
 
 const EditMyRoutines = ({ routines }) => {
-    const token = localStorage.getItem('token')
 
     const [editName, setEditName] = useState('');
     const [editGoal, setEditGoal] = useState('');
-    const isPublic = true
+    const [isPublic, setIsPublic] = useState(false)
 
 
     console.log('ID ID ID', routines.id)
@@ -108,7 +107,7 @@ const EditMyRoutines = ({ routines }) => {
     }, []);
     
     return (
-        <form className='edit-routine' onSubmit={(event) => updateRoutine(editFields)}>
+        <form className='edit-routine' onSubmit={updateRoutine(editFields)}>
             <h3>Edit Routine</h3>
 
             <label>Name:</label>
@@ -120,8 +119,7 @@ const EditMyRoutines = ({ routines }) => {
             value={editGoal} onChange={async (event) => setEditGoal(event.target.value)} />
             
             <label>Public:</label>
-            <input type='checkbox' 
-            defaultChecked={routines.isPublic} />
+            <input type='checkbox' value={isPublic} onChange={(event) => {setIsPublic(event.target.value)}} />
             
             <button type='submit'>Submit</button>
         </form> );

@@ -1,80 +1,52 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { deleteRoutine, getUserRoutines } from "../api/api";
-import { Link, useHistory } from "react-router-dom";
-import EditMyRoutines from "./EditMyRoutines";
 
-const MyRoutines = ({ token, routines, setRoutines, username }) => {
-  console.log('ROUTINES111', routines)
-  const _username = window.localStorage.getItem("username")
-  console.log('USERNAME', username)
-  const [userRoutines, setUserRoutines] = useState([]);
-  const history = useHistory();
 
-  console.log('USERROUTINES!!!', userRoutines)
+const MyRoutines = ({ token, routines, username }) => {
+
+  // console.log('ROUTINES111', routines)
+  // const _username = window.localStorage.getItem("username")
+  // console.log('USERNAME', username)
+  // const history = useHistory();
+
+  
   // console.log('ROUTINEID', routineId)
 
-  const routineDeleteHandler = async (routine) => {
-    console.log('DHROUTINE', routine)
-    console.log('tokennn', token)
-    await deleteRoutine(token, routine);
+  // const routineDeleteHandler = async (routine) => {
+  //   console.log('DHROUTINE', routine)
+  //   console.log('tokennn', token)
+  //   await deleteRoutine(token, routine);
     // setRoutines((prevRoutines) => prevRoutines.filter((routine) => routine.id !== routineId))
-  }
+  
 
-  useEffect(async() => {
-    const gettingUserRoutines = await getUserRoutines(token, _username);
-    setUserRoutines(gettingUserRoutines)
-  }, [])
-      
+  // useEffect(() => {
+  //   const gettingUserRoutines = async () => {
+  //     const userRoutines = await getUserRoutines(token, username);
+  //     setUserRoutines(userRoutines);
+  //   }
+  //   gettingUserRoutines();
+  // }, [token])d
   // const { creatorName }  = routines
   // console.log('CREATORNAME', creatorName)
 
-  const activityDeleteHandler = async (activityId) => {
-    await deleteActivity(token, activityId)
-}
+  const routineDetail = routines.find((aRoutine) => {
+    const foundRoutine = aRoutine.creatorName == username;
+    return foundRoutine
+  })
 
-  return (
-    <div>
-        { userRoutines ? userRoutines.map(content => {
-          const { id } = content
-          const routine = id
-          return (
-          <div className="fluid ui card">
-            <div className="content">
-              <div key={content.id}>
-                <h2 className="center aligned ui header">Routine Creator - {content.creatorName}</h2>
-                  <p className="center aligned ui sub header">Name - {content.name}</p>
-                  <p className="ui small feed">Goal - {content.goal}</p>
-                <div>
-                    {content.activities.map(activity =>
-                        <div key={activity.id}>
-                            <h3 className="center aligned ui sub header">Activity name - {activity.name}</h3>
-                            <p className="ui small feed">Activity discription - {activity.description}</p>
-                            <p className="ui small feed">Duration and Count - {activity.duration} , {activity.count}</p>
-                            <button onClick={() => {activityDeleteHandler(activityId)}}>Delete?</button>
-                        </div>
-                        )}
-                </div>
-                {_username == content.creatorName ? (
-                <>
-                <button onClick={() => {routineDeleteHandler(routine)}}>Delete?</button>
-                <div>
-                Edit This Routine?
-                <EditMyRoutines routines={content}/>
-                </div> 
-                </>
-                 ) : (null)}
-              </div>
-            </div>
+//   const activityDeleteHandler = async (activityId) => {
+//     await deleteActivity(token, routineAcctivityId)
+// }
+  
+    return (<>
+     {routineDetail && routines.map((routine) => 
+          <div key={routine.id}>
+              <h2><a href={`/routines/users/${routine.creatorName}`} params={{username: routine.creatorName}}>Routine Creator - {routine.creatorName}</a></h2>
+              <p>Name - {routine.name}</p>
+              <p>Goal - {routine.goal}</p>               
           </div>
-            )}) : <div>
-                  <h3>
-                    No User Routines
-                  </h3>
-                </div>
-                }
-    </div>
-  );
+     )}
+    </>)
 };
 
-export default MyRoutines;
-
+export default MyRoutines
