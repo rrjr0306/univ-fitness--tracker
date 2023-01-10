@@ -100,15 +100,12 @@ router.get('/me', requireUser, async (req, res, next) => {
 router.get('/:username/routines', requireUser, async (req, res, next) => {
 
 const {username} = req.params;
-console.log("routineUser", username)
 
 const user = await getUserByUsername(username)
-console.log("WHAT?", user)
 
 const publicRoutine = await getPublicRoutinesByUser({username: username});
-console.log("PUBROUTINE", publicRoutine)
 const allRoutines = await getAllRoutinesByUser({username: username});
-console.log("AROUTINEs", allRoutines)
+
 try { 
     if (!username) {
         next({

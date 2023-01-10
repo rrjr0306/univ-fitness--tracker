@@ -1,6 +1,6 @@
 /* eslint-disable no-useless-catch */
 const express = require('express');
-const { getAllPublicRoutines, createRoutine, getRoutineActivityById, getRoutineById, updateRoutine, destroyRoutine, addActivityToRoutine } = require('../db');
+const { getAllPublicRoutines, createRoutine, getRoutineById, updateRoutine, destroyRoutine, addActivityToRoutine } = require('../db');
 const router = express.Router();
 const { requireUser } = require('./utils');
 
@@ -9,7 +9,6 @@ const { requireUser } = require('./utils');
 router.get('/', async (req, res, next) => {
     try {
         const allRoutines = await getAllPublicRoutines();
-        console.log("ALLROUTIENS", allRoutines)
         res.send(allRoutines);
     } catch ({ name, message }) {
         next ({ name, message }); 
@@ -23,8 +22,7 @@ router.get('/', async (req, res, next) => {
 router.post('/', requireUser, async (req, res, next) => {
     const { isPublic, name, goal } = req.body;
     const {id} = req.user;
-    
-    console.log("ID", id)
+
     try {
         const routine = await createRoutine({ 
             creatorId: id,
@@ -34,7 +32,6 @@ router.post('/', requireUser, async (req, res, next) => {
         });
         console.log('ROUTINE', routine)
         res.send(routine)
-
         
     } catch (error) {
         next (error); 
@@ -105,7 +102,6 @@ router.post('/:routineId/activities', async (req, res, next) => {
     try {
         const updatedActivity = await addActivityToRoutine({ routineId, activityId, count, duration })
         res.send(updatedActivity)
-        console.log('UPDATED ACTIVITY', updatedActivity)
         if (!updatedActivity) {
             res.send({
                 error: "Duplicates not allowed",

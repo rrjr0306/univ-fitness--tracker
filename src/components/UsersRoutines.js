@@ -1,29 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { deleteRoutine, getUserRoutines, getSpecificUserRoutines } from "../api/api";
+import { useParams } from "react-router-dom";
+import { deleteRoutine, getUserRoutines } from "../api/api";
 
 const UsersRoutines = (props) => {
-    const { routines }  = props;
     const {token} = props;
     const { username } = useParams();
-    console.log('users_username', username)
     const [userRoutines, setUserRoutines] = useState([]);
 
     const deleteHandler = async (routine) => {
-        console.log('DHROUTINE', routine)
-        console.log('tokennn', token)
         await deleteRoutine(token, routine);
-        // setRoutines((prevRoutines) => prevRoutines.filter((routine) => routine.id !== routineId))
       }
-
-    // usersRoutines = await getSpecificUserRoutines(username)
 
     useEffect(async() => {
         const gettingUserRoutines = await getUserRoutines(token, username);
         setUserRoutines(gettingUserRoutines)
       }, [])
-    console.log('USSSERR ROUTINES', userRoutines)
-
 
     if (token) {
         return (
