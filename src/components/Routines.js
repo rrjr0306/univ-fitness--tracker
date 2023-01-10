@@ -6,10 +6,8 @@ const Routines = ({routines, token, setActivities}) => {
     if (!routines) {
         return (<h1>Loading</h1>)
       }
-    // console.log('MAINROUTINES', routines)
-    
+
     const activityDeleteHandler = async (routineActivityId) => {
-        // console.log('can you see me??!!', routineActivityId)
         await deleteRoutineActivity(token, routineActivityId)
         setActivities((prevActivities) => prevActivities.filter((activity) => activity.routineActivityId !== routineActivityId))
     }  

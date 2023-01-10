@@ -2,11 +2,6 @@ import React from "react";
 
 const ActivityItem = ({activities}) => {
 
-
-
-
-
-    console.log(activities, "IN ITEMS")
     return (
         <div className="fluid ui card">
             <div className="content">

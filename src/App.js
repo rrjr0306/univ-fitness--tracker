@@ -42,7 +42,6 @@ const App = () => {
         try {
             const gettingRoutines = async () => { 
                 const routines = await getRoutines(); 
-                console.log("ROUTINESSSSS", routines)    
                 setRoutines(routines);
             }
             gettingRoutines();
@@ -119,10 +118,6 @@ const App = () => {
                 <Route path="/Routines/users/:username">
                     <UsersRoutines routines={routines} username={username} token={token}/>
                 </Route>                
-                {/* <Route path="/Routines/:routineId">
-                    <RoutineItem routines={routines} token={token}/>
-                </Route> */}
- 
                 <Route path="/Routines">
                     <Routines routines={routines} token={token} setActivities={setActivities}/>
                 </Route>
