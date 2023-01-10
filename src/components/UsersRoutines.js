@@ -6,7 +6,15 @@ const UsersRoutines = (props) => {
     const { routines }  = props;
     const {token} = props;
     const { username } = useParams();
+    console.log('users_username', username)
     const [userRoutines, setUserRoutines] = useState([]);
+
+    const deleteHandler = async (routine) => {
+        console.log('DHROUTINE', routine)
+        console.log('tokennn', token)
+        await deleteRoutine(token, routine);
+        // setRoutines((prevRoutines) => prevRoutines.filter((routine) => routine.id !== routineId))
+      }
 
     // usersRoutines = await getSpecificUserRoutines(username)
 
@@ -14,9 +22,37 @@ const UsersRoutines = (props) => {
         const gettingUserRoutines = await getUserRoutines(token, username);
         setUserRoutines(gettingUserRoutines)
       }, [])
-
     console.log('USSSERR ROUTINES', userRoutines)
 
+
+    if (token) {
+        return (
+            <div>
+                {userRoutines.map(content => {
+                    const { id } = content
+                    const routine = id
+                    return (
+                    <div key={content.id}>
+                        <h2>Routine Creator - {content.creatorName}</h2>
+                        <p>Name - {content.name}</p>
+                        <p>Goal - {content.goal}</p>
+                        <div>
+                            {content.activities.map(activity =>
+                                <div key={activity.id}>
+                                    <h3>Activity name - {activity.name}</h3>
+                                    <p>Activity discription - {activity.description}</p>
+                                    <p>Duration and Count - {activity.duration} , {activity.count}</p>
+                                </div>
+                                )}
+                        </div>                 
+                    <button onClick={() => {deleteHandler(routine)}}>Delete</button>
+                    </div>
+                    
+                    )} ) }
+            </div>
+      );
+    } else {
+    
   return (
         <div>
             {userRoutines.map(content => 
@@ -36,7 +72,7 @@ const UsersRoutines = (props) => {
                 </div>
                 )}
         </div>
-  );
+  ); }
 }
 ;
 
