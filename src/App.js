@@ -77,7 +77,7 @@ const App = () => {
                 <Link className="item" style={{color:"white"}} to="/Routines">
                     Routines
                 </Link>
-                {token? <Link className="item" style={{color: "white"}} to="/Myroutines">
+                {token? <Link className="item" style={{color: "white"}} to={"/routines/users/" + username}>
                     My Routines
                 </Link> : null}
 

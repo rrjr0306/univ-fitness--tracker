@@ -163,7 +163,7 @@ export const createRoutine = async (token, name, goal, isPublic) => {
 
 export const getUserRoutines = async(token, username) => {
     const url = `${BASE_URL}/users/${username}/routines`
-
+    console.log("thissss username", username)
     try {
         const response = await fetch(url, {
             method: "GET",
@@ -203,7 +203,7 @@ export const getSpecificUserRoutines = async(token, username) => {
 
 export const deleteRoutine = async (token, routineId) => {
 
-    const url = `${BASE_URL}/routine/${routineId}`;
+    const url = `${BASE_URL}/routines/${routineId}`;
 
     try {
         const response = await fetch(url, {
